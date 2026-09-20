@@ -107,7 +107,7 @@ class Enfant
         return $this->notes;
     }
 
-    public function addNote(Note $note): static
+    public function addNote(Note $note): self
     {
         if (!$this->notes->contains($note)) {
             $this->notes->add($note);
@@ -117,7 +117,7 @@ class Enfant
         return $this;
     }
 
-    public function removeNote(Note $note): static
+    public function removeNote(Note $note): self
     {
         if ($this->notes->removeElement($note)) {
             // set the owning side to null (unless already changed)
@@ -137,7 +137,7 @@ class Enfant
         return $this->remunerations;
     }
 
-    public function addRemuneration(Remuneration $remuneration): static
+    public function addRemuneration(Remuneration $remuneration): self
     {
         if (!$this->remunerations->contains($remuneration)) {
             $this->remunerations->add($remuneration);
@@ -147,7 +147,7 @@ class Enfant
         return $this;
     }
 
-    public function removeRemuneration(Remuneration $remuneration): static
+    public function removeRemuneration(Remuneration $remuneration): self
     {
         if ($this->remunerations->removeElement($remuneration)) {
             // set the owning side to null (unless already changed)

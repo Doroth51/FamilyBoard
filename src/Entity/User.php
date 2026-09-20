@@ -128,7 +128,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->familyGroups;
     }
 
-    public function addFamilyGroup(FamilyGroup $familyGroup): static
+    public function addFamilyGroup(FamilyGroup $familyGroup): self
     {
         if (!$this->familyGroups->contains($familyGroup)) {
             $this->familyGroups->add($familyGroup);
@@ -138,7 +138,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeFamilyGroup(FamilyGroup $familyGroup): static
+    public function removeFamilyGroup(FamilyGroup $familyGroup): self
     {
         if ($this->familyGroups->removeElement($familyGroup)) {
             $familyGroup->removeUser($this);

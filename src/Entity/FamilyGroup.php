@@ -46,7 +46,7 @@ class FamilyGroup
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -61,7 +61,7 @@ class FamilyGroup
         return $this->enfants;
     }
 
-    public function addEnfant(Enfant $enfant): static
+    public function addEnfant(Enfant $enfant): self
     {
         if (!$this->enfants->contains($enfant)) {
             $this->enfants->add($enfant);
@@ -71,7 +71,7 @@ class FamilyGroup
         return $this;
     }
 
-    public function removeEnfant(Enfant $enfant): static
+    public function removeEnfant(Enfant $enfant): self
     {
         if ($this->enfants->removeElement($enfant)) {
             $enfant->removeFamilyGroup($this);
@@ -88,7 +88,7 @@ class FamilyGroup
         return $this->users;
     }
 
-    public function addUser(User $user): static
+    public function addUser(User $user): self
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
@@ -97,7 +97,7 @@ class FamilyGroup
         return $this;
     }
 
-    public function removeUser(User $user): static
+    public function removeUser(User $user): self
     {
         $this->users->removeElement($user);
 

@@ -72,7 +72,7 @@ class Remuneration
         return $this->enfant;
     }
 
-    public function setEnfant(?Enfant $enfant): static
+    public function setEnfant(?Enfant $enfant): self
     {
         $this->enfant = $enfant;
 

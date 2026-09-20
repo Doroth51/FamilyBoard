@@ -111,7 +111,7 @@ class Note
         return $this->enfant;
     }
 
-    public function setEnfant(?Enfant $enfant): static
+    public function setEnfant(?Enfant $enfant): self
     {
         $this->enfant = $enfant;
 
@@ -123,7 +123,7 @@ class Note
         return $this->matiere;
     }
 
-    public function setMatiere(string $matiere): static
+    public function setMatiere(string $matiere): self
     {
         $this->matiere = $matiere;
 
@@ -135,7 +135,7 @@ class Note
         return $this->libelle;
     }
 
-    public function setLibelle(?string $libelle): static
+    public function setLibelle(?string $libelle): self
     {
         $this->libelle = $libelle;
 
@@ -147,7 +147,7 @@ class Note
         return $this->periode;
     }
 
-    public function setPeriode(?Periode $periode): static
+    public function setPeriode(?Periode $periode): self
     {
         $this->periode = $periode;
 
