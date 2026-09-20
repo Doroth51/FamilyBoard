@@ -39,11 +39,18 @@ class Enfant
     #[ORM\OneToMany(targetEntity: Remuneration::class, mappedBy: 'enfant')]
     private Collection $remunerations;
 
+    /**
+     * @var Collection<int, Evaluation>
+     */
+    #[ORM\OneToMany(targetEntity: Evaluation::class, mappedBy: 'enfant')]
+    private Collection $evaluations;
+
     public function __construct()
     {
         $this->familyGroup = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->remunerations = new ArrayCollection();
+        $this->evaluations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -153,6 +160,36 @@ class Enfant
             // set the owning side to null (unless already changed)
             if ($remuneration->getEnfant() === $this) {
                 $remuneration->setEnfant(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Evaluation>
+     */
+    public function getEvaluations(): Collection
+    {
+        return $this->evaluations;
+    }
+
+    public function addEvaluation(Evaluation $evaluation): static
+    {
+        if (!$this->evaluations->contains($evaluation)) {
+            $this->evaluations->add($evaluation);
+            $evaluation->setEnfant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvaluation(Evaluation $evaluation): static
+    {
+        if ($this->evaluations->removeElement($evaluation)) {
+            // set the owning side to null (unless already changed)
+            if ($evaluation->getEnfant() === $this) {
+                $evaluation->setEnfant(null);
             }
         }
 

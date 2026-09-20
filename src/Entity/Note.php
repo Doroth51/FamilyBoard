@@ -41,6 +41,9 @@ class Note
     #[ORM\ManyToOne(inversedBy: 'notes')]
     private ?Periode $periode = null;
 
+    #[ORM\ManyToOne(inversedBy: 'notes')]
+    private ?Remuneration $remuneration = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -150,6 +153,18 @@ class Note
     public function setPeriode(?Periode $periode): self
     {
         $this->periode = $periode;
+
+        return $this;
+    }
+
+    public function getRemuneration(): ?Remuneration
+    {
+        return $this->remuneration;
+    }
+
+    public function setRemuneration(?Remuneration $remuneration): self
+    {
+        $this->remuneration = $remuneration;
 
         return $this;
     }

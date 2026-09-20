@@ -30,9 +30,16 @@ class Periode
     #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'periode')]
     private Collection $notes;
 
+    /**
+     * @var Collection<int, Evaluation>
+     */
+    #[ORM\OneToMany(targetEntity: Evaluation::class, mappedBy: 'periode')]
+    private Collection $enfant;
+
     public function __construct()
     {
         $this->notes = new ArrayCollection();
+        $this->enfant = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -45,7 +52,7 @@ class Periode
         return $this->type;
     }
 
-    public function setType(string $type): static
+    public function setType(string $type): self
     {
         $this->type = $type;
 
@@ -57,7 +64,7 @@ class Periode
         return $this->numero;
     }
 
-    public function setNumero(int $numero): static
+    public function setNumero(int $numero): self
     {
         $this->numero = $numero;
 
@@ -69,7 +76,7 @@ class Periode
         return $this->annee;
     }
 
-    public function setAnnee(string $annee): static
+    public function setAnnee(string $annee): self
     {
         $this->annee = $annee;
 
@@ -84,7 +91,7 @@ class Periode
         return $this->notes;
     }
 
-    public function addNote(Note $note): static
+    public function addNote(Note $note): self
     {
         if (!$this->notes->contains($note)) {
             $this->notes->add($note);
@@ -94,12 +101,42 @@ class Periode
         return $this;
     }
 
-    public function removeNote(Note $note): static
+    public function removeNote(Note $note): self
     {
         if ($this->notes->removeElement($note)) {
             // set the owning side to null (unless already changed)
             if ($note->getPeriode() === $this) {
                 $note->setPeriode(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Evaluation>
+     */
+    public function getEnfant(): Collection
+    {
+        return $this->enfant;
+    }
+
+    public function addEnfant(Evaluation $enfant): static
+    {
+        if (!$this->enfant->contains($enfant)) {
+            $this->enfant->add($enfant);
+            $enfant->setPeriode($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEnfant(Evaluation $enfant): static
+    {
+        if ($this->enfant->removeElement($enfant)) {
+            // set the owning side to null (unless already changed)
+            if ($enfant->getPeriode() === $this) {
+                $enfant->setPeriode(null);
             }
         }
 

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RemunerationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,6 +27,24 @@ class Remuneration
 
     #[ORM\ManyToOne(inversedBy: 'remunerations')]
     private ?Enfant $enfant = null;
+
+    /**
+     * @var Collection<int, Note>
+     */
+    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'remuneration')]
+    private Collection $notes;
+
+    /**
+     * @var Collection<int, Evaluation>
+     */
+    #[ORM\OneToMany(targetEntity: Evaluation::class, mappedBy: 'remuneration')]
+    private Collection $evaluations;
+
+    public function __construct()
+    {
+        $this->notes = new ArrayCollection();
+        $this->evaluations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -75,6 +95,66 @@ class Remuneration
     public function setEnfant(?Enfant $enfant): self
     {
         $this->enfant = $enfant;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Note>
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function addNote(Note $note): self
+    {
+        if (!$this->notes->contains($note)) {
+            $this->notes->add($note);
+            $note->setRemuneration($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNote(Note $note): self
+    {
+        if ($this->notes->removeElement($note)) {
+            // set the owning side to null (unless already changed)
+            if ($note->getRemuneration() === $this) {
+                $note->setRemuneration(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Evaluation>
+     */
+    public function getEvaluations(): Collection
+    {
+        return $this->evaluations;
+    }
+
+    public function addEvaluation(Evaluation $evaluation): self
+    {
+        if (!$this->evaluations->contains($evaluation)) {
+            $this->evaluations->add($evaluation);
+            $evaluation->setRemuneration($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvaluation(Evaluation $evaluation): self
+    {
+        if ($this->evaluations->removeElement($evaluation)) {
+            // set the owning side to null (unless already changed)
+            if ($evaluation->getRemuneration() === $this) {
+                $evaluation->setRemuneration(null);
+            }
+        }
 
         return $this;
     }
