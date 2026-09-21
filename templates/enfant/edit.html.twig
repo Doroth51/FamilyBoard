@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un enfant{% endblock %}
+
+{% block body %}
+    <h1>Modifier un enfant</h1>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button type="submit">Mettre à jour</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('enfant_index') }}">Retour</a>
+{% endblock %}

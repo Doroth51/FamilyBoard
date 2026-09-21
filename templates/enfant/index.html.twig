@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Enfants{% endblock %}
+
+{% block body %}
+    <h1>Liste des enfants</h1>
+
+    <a href="{{ path('enfant_new') }}">Créer un enfant</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Classe</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for enfant in enfants %}
+                <tr>
+                    <td>{{ enfant.id }}</td>
+                    <td>{{ enfant.name }}</td>
+                    <td>{{ enfant.classe }}</td>
+                    <td>
+                        <a href="{{ path('enfant_show', {id: enfant.id}) }}">Voir</a>
+                        <a href="{{ path('enfant_edit', {id: enfant.id}) }}">Modifier</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

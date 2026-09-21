@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l’enfant{% endblock %}
+
+{% block body %}
+    <h1>{{ enfant.name }}</h1>
+
+    <p>Classe : {{ enfant.classe }}</p>
+
+    <form method="post" action="{{ path('enfant_delete', {id: enfant.id}) }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ enfant.id) }}">
+        <button type="submit">Supprimer</button>
+    </form>
+
+    <a href="{{ path('enfant_index') }}">Retour</a>
+{% endblock %}
