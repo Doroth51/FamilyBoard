@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier une évaluation{% endblock %}
+
+{% block body %}
+    <h1>Modifier une évaluation</h1>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button type="submit">Mettre à jour</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('evaluation_index') }}">Retour</a>
+{% endblock %}

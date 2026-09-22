@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Évaluations{% endblock %}
+
+{% block body %}
+    <h1>Liste des évaluations</h1>
+
+    <a href="{{ path('evaluation_new') }}">Ajouter une évaluation</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Matière</th>
+                <th>Niveau</th>
+                <th>Enfant</th>
+                <th>Période</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for evaluation in evaluations %}
+                <tr>
+                    <td>{{ evaluation.matiere }}</td>
+                    <td>{{ evaluation.niveau }}</td>
+                    <td>{{ evaluation.enfant.name }}</td>
+                    <td>{{ evaluation.periode.type }} {{ evaluation.periode.numero }}</td>
+                    <td>
+                        <a href="{{ path('evaluation_show', {id: evaluation.id}) }}">Voir</a>
+                        <a href="{{ path('evaluation_edit', {id: evaluation.id}) }}">Modifier</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

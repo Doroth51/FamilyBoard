@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard Parent{% endblock %}
+
+{% block body %}
+    <h1>Tableau de bord familial</h1>
+
+    <h2>Enfants</h2>
+
+    <ul>
+        {% for enfant in enfants %}
+            <li>
+                <a href="{{ path('dashboard_enfant', {id: enfant.id}) }}">
+                    {{ enfant.name }} ({{ enfant.classe }})
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h2>Périodes</h2>
+    <ul>
+        {% for periode in periodes %}
+            <li>{{ periode.type }} {{ periode.numero }} - {{ periode.annee }}</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail de l’évaluation{% endblock %}
+
+{% block body %}
+    <h1>{{ evaluation.matiere }}</h1>
+
+    <p>Niveau : {{ evaluation.niveau }}</p>
+    <p>Commentaire : {{ evaluation.libelle }}</p>
+    <p>Date : {{ evaluation.date|date('d/m/Y') }}</p>
+    <p>Enfant : {{ evaluation.enfant.name }}</p>
+    <p>Période : {{ evaluation.periode.type }} {{ evaluation.periode.numero }}</p>
+
+    <form method="post" action="{{ path('evaluation_delete', {id: evaluation.id}) }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ evaluation.id) }}">
+        <button type="submit">Supprimer</button>
+    </form>
+
+    <a href="{{ path('evaluation_index') }}">Retour</a>
+{% endblock %}

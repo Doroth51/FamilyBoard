@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard Enfant{% endblock %}
+
+{% block body %}
+    <h1>{{ enfant.name }} — {{ enfant.classe }}</h1>
+
+    <h2>Notes</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Matière</th>
+                <th>Note</th>
+                <th>Coef</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for note in notes %}
+                <tr>
+                    <td>{{ note.matiere }}</td>
+                    <td>{{ note.note }}/{{ note.denominateur }}</td>
+                    <td>{{ note.coefficient }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Évaluations</h2>
+    <ul>
+        {% for eval in evaluations %}
+            <li>{{ eval.matiere }} : {{ eval.niveau }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Rémunérations</h2>
+    <ul>
+        {% for r in remunerations %}
+            <li>{{ r.date|date('d/m/Y') }} — {{ r.montant }} € ({{ r.type.name }})</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ path('dashboard_parent') }}">Retour</a>
+{% endblock %}
