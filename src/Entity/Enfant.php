@@ -174,7 +174,7 @@ class Enfant
         return $this->evaluations;
     }
 
-    public function addEvaluation(Evaluation $evaluation): static
+    public function addEvaluation(Evaluation $evaluation): self
     {
         if (!$this->evaluations->contains($evaluation)) {
             $this->evaluations->add($evaluation);
@@ -184,7 +184,7 @@ class Enfant
         return $this;
     }
 
-    public function removeEvaluation(Evaluation $evaluation): static
+    public function removeEvaluation(Evaluation $evaluation): self
     {
         if ($this->evaluations->removeElement($evaluation)) {
             // set the owning side to null (unless already changed)

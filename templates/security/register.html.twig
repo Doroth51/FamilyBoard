@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription — FamilyBoard{% endblock %}
+
+{% block body %}
+    <div class="register-container">
+        <h1>Créer un compte</h1>
+
+        {{ form_start(form) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.password) }}
+
+        <button class="btn btn-secondary">Créer mon compte</button>
+        {{ form_end(form) }}
+
+        <p class="login-link">
+            Déjà inscrit ?
+            <a href="{{ path('app_login') }}">Connexion</a>
+        </p>
+    </div>
+
+    <style>
+        .register-container {
+            max-width: 400px;
+            margin: 60px auto;
+            padding: 30px;
+            border-radius: 10px;
+            background: #f9f9f9;
+            text-align: center;
+        }
+        .login-link {
+            margin-top: 20px;
+        }
+    </style>
+{% endblock %}

@@ -24,4 +24,52 @@
         {% endfor %}
     </ul>
 
+    <h2>Résumé global</h2>
+
+    <div class="stats">
+        <div class="stat-card">
+            <h3>Notes</h3>
+            <p>Total : {{ totalNotes }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Appréciations</h3>
+            <p>Total : {{ totalEvaluations }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Récompenses</h3>
+            <p>Total : {{ totalRemunerations }} €</p>
+        </div>
+    </div>
+
+    <h2>Synthèse par période</h2>
+
+    {% for enfant in enfants %}
+        <h3>{{ enfant.name }} — {{ enfant.classe }}</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Période</th>
+                    <th>Moyenne</th>
+                    <th>Appréciations</th>
+                    <th>Score global</th>
+                    <th>Récompenses</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for periodeId, item in syntheses[enfant.id] %}
+                    <tr>
+                        <td>{{ item.periode.type }} {{ item.periode.numero }} — {{ item.periode.annee }}</td>
+                        <td>{{ item.moyenne ?? '—' }}</td>
+                        <td>{{ item.appreciation ?? '—' }}</td>
+                        <td>{{ item.global ?? '—' }}</td>
+                        <td>{{ item.recompenses }} €</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+
 {% endblock %}

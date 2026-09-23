@@ -28,7 +28,18 @@
     <h2>Évaluations</h2>
     <ul>
         {% for eval in evaluations %}
-            <li>{{ eval.matiere }} : {{ eval.niveau }}</li>
+            <li>
+                {{ eval.matiere }} :
+                {% if eval.niveau == 'TBM' %}
+                    <span class="badge badge-tbm">Très bonne maîtrise</span>
+                {% elseif eval.niveau == 'MS' %}
+                    <span class="badge badge-ms">Maîtrise suffisante</span>
+                {% elseif eval.niveau == 'MI' %}
+                    <span class="badge badge-mi">Maîtrise insuffisante</span>
+                {% elseif eval.niveau == 'CNA' %}
+                    <span class="badge badge-cna">Non acquis</span>
+                {% endif %}
+            </li>
         {% endfor %}
     </ul>
 
@@ -38,6 +49,143 @@
             <li>{{ r.date|date('d/m/Y') }} — {{ r.montant }} € ({{ r.type.name }})</li>
         {% endfor %}
     </ul>
+
+    <h2>Récompenses</h2>
+    <p>Total : {{ synthese.total }} €</p>
+
+    <h3>Par type</h3>
+    <ul>
+        {% for type, montant in synthese.parType %}
+            <li>{{ type }} : {{ montant }} €</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Progression</h2>
+
+    <p>
+        Appréciations :
+        {% if item.data.appreciation %}
+            {% set score = item.data.appreciation %}
+            {% if score >= 3.5 %}
+                <span class="badge badge-tbm">Excellent</span>
+            {% elseif score >= 2.5 %}
+                <span class="badge badge-ms">Bon</span>
+            {% elseif score >= 1.5 %}
+                <span class="badge badge-mi">Faible</span>
+            {% else %}
+                <span class="badge badge-cna">Insuffisant</span>
+            {% endif %}
+        {% else %}
+            —
+        {% endif %}
+    </p>
+
+    {% for periodeId, item in progression %}
+        <div class="periode-block">
+            <h3>{{ item.periode.type }} {{ item.periode.numero }} — {{ item.periode.annee }}</h3>
+
+            <p>Moyenne : {{ item.data.moyenne ?? '—' }}</p>
+            <p>Appréciations : {{ item.data.appreciation ?? '—' }}</p>
+            <p>Score global : {{ item.data.global ?? '—' }}</p>
+        </div>
+    {% endfor %}
+
+    <h2>Radar des matières</h2>
+
+    <canvas id="matiereRadar"></canvas>
+
+    {% set matieres = [] %}
+    {% set moyennesMatieres = [] %}
+
+    {% for matiere, moyenne in matiereStats %}
+        {% set matieres = matieres|merge([matiere]) %}
+        {% set moyennesMatieres = moyennesMatieres|merge([moyenne]) %}
+    {% endfor %}
+
+    <h2>Graphique de progression</h2>
+
+    <canvas id="progressionChart"></canvas>
+
+    {% set labels = [] %}
+    {% set moyennes = [] %}
+    {% set appreciations = [] %}
+    {% set globalScores = [] %}
+
+    {% for periodeId, item in progression %}
+        {% set labels = labels|merge([item.periode.type ~ ' ' ~ item.periode.numero]) %}
+        {% set moyennes = moyennes|merge([item.data.moyenne ?? 0]) %}
+        {% set appreciations = appreciations|merge([item.data.appreciation ?? 0]) %}
+        {% set globalScores = globalScores|merge([item.data.global ?? 0]) %}
+    {% endfor %}
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+const ctx = document.getElementById('progressionChart');
+const radarCtx = document.getElementById('matiereRadar');
+
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: {{ labels|json_encode|raw }},
+        datasets: [
+            {
+                label: 'Moyenne des notes',
+                data: {{ moyennes|json_encode|raw }},
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.3
+            },
+            {
+                label: 'Score appréciations',
+                data: {{ appreciations|json_encode|raw }},
+                borderColor: 'rgba(54, 162, 235, 1)',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                tension: 0.3
+            },
+            {
+                label: 'Score global',
+                data: {{ globalScores|json_encode|raw }},
+                borderColor: 'rgba(255, 99, 132, 1)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                tension: 0.3
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 20
+            }
+        }
+    }
+});
+
+new Chart(radarCtx, {
+    type: 'radar',
+    data: {
+        labels: {{ matieres|json_encode|raw }},
+        datasets: [{
+            label: 'Moyenne par matière',
+            data: {{ moyennesMatieres|json_encode|raw }},
+            backgroundColor: 'rgba(52, 152, 219, 0.2)',
+            borderColor: 'rgba(52, 152, 219, 1)',
+            borderWidth: 2,
+            pointBackgroundColor: 'rgba(52, 152, 219, 1)'
+        }]
+    },
+    options: {
+        scales: {
+            r: {
+                beginAtZero: true,
+                max: 20
+            }
+        }
+    }
+});
+</script>
 
     <a href="{{ path('dashboard_parent') }}">Retour</a>
 {% endblock %}
