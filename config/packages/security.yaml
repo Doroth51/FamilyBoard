@@ -52,12 +52,13 @@ security:
     # Note: Only the *first* matching rule is applied
     access_control:
         # Page de login et inscription
+        - { path: ^/$, roles: PUBLIC_ACCESS }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
-        - { path: ^/$, roles: ROLE_USER }
 
         # Dashboard parent
         - { path: ^/dashboard, roles: ROLE_PARENT }
+        - { path: ^/family, roles: ROLE_PARENT }
 
         # CRUD admin
         - { path: ^/admin, roles: ROLE_ADMIN }
