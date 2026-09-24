@@ -20,6 +20,9 @@
     </head>
     <body>
         <nav>
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('admin_dashboard') }}">Admin</a>
+            {% endif %}
             <a href="{{ path('dashboard_parent') }}">Dashboard</a>
             <a href="{{ path('enfant_index') }}">Enfants</a>
         </nav>

@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\FamilyGroup;
 use App\Form\FamilyGroupType;
+use App\Repository\EnfantRepository;
 use App\Repository\FamilyGroupRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,15 +39,20 @@ class FamilyGroupController extends AbstractController
 
         return $this->render('family_group/new.html.twig', [
             'group' => $group,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     #[Route('/{id}', name: 'family_group_show', methods: ['GET'])]
-    public function show(FamilyGroup $group): Response
-    {
+    public function show(
+        FamilyGroup $group,
+        UserRepository $userRepo,
+        EnfantRepository $enfantRepo
+    ): Response {
         return $this->render('family_group/show.html.twig', [
             'group' => $group,
+            'parents' => $userRepo->findAll(),
+            'enfants' => $enfantRepo->findAll(),
         ]);
     }
 
@@ -62,7 +69,7 @@ class FamilyGroupController extends AbstractController
 
         return $this->render('family_group/edit.html.twig', [
             'group' => $group,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -75,5 +82,45 @@ class FamilyGroupController extends AbstractController
         }
 
         return $this->redirectToRoute('family_group_index');
+    }
+
+    #[Route('/{id}/add-parent', name: 'family_group_add_parent', methods: ['POST'])]
+    public function addParent(
+        FamilyGroup $group,
+        UserRepository $userRepo,
+        Request $request,
+        EntityManagerInterface $em
+    ): Response {
+        $parentId = $request->request->get('parent_id');
+        $parent = $userRepo->find($parentId);
+
+        if (!$parent) {
+            throw $this->createNotFoundException("Parent introuvable");
+        }
+
+        $group->addUser($parent);
+        $em->flush();
+
+        return $this->redirectToRoute('family_group_show', ['id' => $group->getId()]);
+    }
+
+    #[Route('/{id}/add-enfant', name: 'family_group_add_enfant', methods: ['POST'])]
+    public function addEnfant(
+        FamilyGroup $group,
+        EnfantRepository $enfantRepo,
+        Request $request,
+        EntityManagerInterface $em
+    ): Response {
+        $enfantId = $request->request->get('enfant_id');
+        $enfant = $enfantRepo->find($enfantId);
+
+        if (!$enfant) {
+            throw $this->createNotFoundException("Enfant introuvable");
+        }
+
+        $group->addEnfant($enfant);
+        $em->flush();
+
+        return $this->redirectToRoute('family_group_show', ['id' => $group->getId()]);
     }
 }

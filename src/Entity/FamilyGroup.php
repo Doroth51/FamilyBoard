@@ -21,7 +21,7 @@ class FamilyGroup
     /**
      * @var Collection<int, Enfant>
      */
-    #[ORM\ManyToMany(targetEntity: Enfant::class, mappedBy: 'familyGroup')]
+    #[ORM\ManyToMany(targetEntity: Enfant::class, mappedBy: 'familyGroups')]
     private Collection $enfants;
 
     /**
@@ -92,6 +92,7 @@ class FamilyGroup
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
+            $user->addFamilyGroup($this);
         }
 
         return $this;

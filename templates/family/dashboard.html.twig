@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard Famille{% endblock %}
+
+{% block body %}
+
+    <h1>Dashboard Famille</h1>
+    <p>Bienvenue {{ app.user.email }} 👋</p>
+
+    <hr>
+
+    {% if enfants is empty %}
+        <p>Aucun enfant associé à votre compte.</p>
+        <a href="{{ path('family_group_index') }}" class="btn btn-primary">Gérer mes familles</a>
+    {% else %}
+
+        <div class="children-grid">
+
+            {% for enfant in enfants %}
+                <div class="child-card">
+                    <h2>{{ enfant.name }} — {{ enfant.classe }}</h2>
+
+                    <h3>Résumé</h3>
+
+                    {% set synth = syntheses[enfant.id] %}
+
+                    <table class="summary-table">
+                        <thead>
+                            <tr>
+                                <th>Période</th>
+                                <th>Moyenne</th>
+                                <th>Appréciations</th>
+                                <th>Global</th>
+                                <th>Récompenses</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for periodeId, item in synth %}
+                                <tr>
+                                    <td>{{ item.periode.type }} {{ item.periode.numero }}</td>
+                                    <td>{{ item.moyenne ?? '—' }}</td>
+                                    <td>{{ item.appreciation ?? '—' }}</td>
+                                    <td>{{ item.global ?? '—' }}</td>
+                                    <td>{{ item.recompenses }} €</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <a href="{{ path('dashboard_enfant', {id: enfant.id}) }}" class="btn btn-secondary">
+                        Voir le dashboard complet
+                    </a>
+                </div>
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+    <style>
+        .children-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .child-card {
+            background: #f8f8f8;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary-table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+
+        .summary-table th,
+        .summary-table td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            margin-top: 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+        }
+
+        .btn-secondary {
+            background-color: #2ecc71;
+        }
+    </style>
+
+{% endblock %}

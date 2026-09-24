@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Famille : {{ group.name }}{% endblock %}
+
+{% block body %}
+
+    <h1>Famille : {{ group.name }}</h1>
+
+    <hr>
+
+    <h2>Parents</h2>
+
+    {% if group.users|length == 0 %}
+        <p>Aucun parent associé.</p>
+    {% else %}
+        <ul>
+            {% for user in group.users %}
+                <li>{{ user.email }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <h3>Ajouter un parent</h3>
+
+    <form action="{{ path('family_group_add_user', {id: group.id}) }}" method="post">
+        <label for="parent_id">Sélectionner un parent :</label>
+        <select name="parent_id" id="parent_id" required>
+            {% for parent in parents %}
+                <option value="{{ parent.id }}">{{ parent.email }}</option>
+            {% endfor %}
+        </select>
+
+        <button class="btn btn-primary">Ajouter</button>
+    </form>
+
+    <hr>
+
+    <h2>Enfants</h2>
+
+    {% if group.enfants|length == 0 %}
+        <p>Aucun enfant associé.</p>
+    {% else %}
+        <ul>
+            {% for enfant in group.enfants %}
+                <li>{{ enfant.name }} — {{ enfant.classe }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <h3>Ajouter un enfant</h3>
+
+    <form action="{{ path('family_group_add_enfant', {id: group.id}) }}" method="post">
+        <label for="enfant_id">Sélectionner un enfant :</label>
+        <select name="enfant_id" id="enfant_id" required>
+            {% for enfant in enfants %}
+                <option value="{{ enfant.id }}">{{ enfant.name }} ({{ enfant.classe }})</option>
+            {% endfor %}
+        </select>
+
+        <button class="btn btn-secondary">Ajouter</button>
+    </form>
+
+    <hr>
+
+    <a href="{{ path('family_group_index') }}" class="btn btn-light">Retour</a>
+
+    <style>
+        h1,
+        h2,
+        h3 {
+            margin-bottom: 15px;
+        }
+
+        form {
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        select {
+            padding: 8px;
+            margin-right: 10px;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+        }
+
+        .btn-secondary {
+            background-color: #2ecc71;
+        }
+
+        .btn-light {
+            background-color: #bdc3c7;
+            color: black;
+        }
+    </style>
+
+{% endblock %}

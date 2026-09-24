@@ -1,0 +1,39 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block admin_content %}
+    <h1>Dashboard Administrateur</h1>
+
+    <p>Bienvenue dans l’espace d’administration de FamilyBoard.</p>
+
+    <div class="cards">
+        <a href="{{ path('user_index') }}" class="card">Utilisateurs</a>
+        <a href="{{ path('enfant_index') }}" class="card">Enfants</a>
+        <a href="{{ path('periode_index') }}" class="card">Périodes</a>
+        <a href="{{ path('matiere_index') }}" class="card">Matières</a>
+        <a href="{{ path('note_index') }}" class="card">Notes</a>
+        <a href="{{ path('evaluation_index') }}" class="card">Évaluations</a>
+        <a href="{{ path('remuneration_index') }}" class="card">Récompenses</a>
+    </div>
+
+    <style>
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .card {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            width: 200px;
+            text-align: center;
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .card:hover {
+            background: #bdc3c7;
+        }
+    </style>
+{% endblock %}

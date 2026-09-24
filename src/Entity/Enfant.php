@@ -25,7 +25,7 @@ class Enfant
      * @var Collection<int, FamilyGroup>
      */
     #[ORM\ManyToMany(targetEntity: FamilyGroup::class, inversedBy: 'enfants')]
-    private Collection $familyGroup;
+    private Collection $familyGroups;
 
     /**
      * @var Collection<int, Note>
@@ -47,7 +47,7 @@ class Enfant
 
     public function __construct()
     {
-        $this->familyGroup = new ArrayCollection();
+        $this->familyGroups = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->remunerations = new ArrayCollection();
         $this->evaluations = new ArrayCollection();
@@ -87,13 +87,14 @@ class Enfant
      */
     public function getFamilyGroup(): Collection
     {
-        return $this->familyGroup;
+        return $this->familyGroups;
     }
 
     public function addFamilyGroup(FamilyGroup $familyGroup): self
     {
-        if (!$this->familyGroup->contains($familyGroup)) {
-            $this->familyGroup->add($familyGroup);
+        if (!$this->familyGroups->contains($familyGroup)) {
+            $this->familyGroups->add($familyGroup);
+            $familyGroup->addEnfant($this);
         }
 
         return $this;
@@ -101,7 +102,7 @@ class Enfant
 
     public function removeFamilyGroup(FamilyGroup $familyGroup): self
     {
-        $this->familyGroup->removeElement($familyGroup);
+        $this->familyGroups->removeElement($familyGroup);
 
         return $this;
     }

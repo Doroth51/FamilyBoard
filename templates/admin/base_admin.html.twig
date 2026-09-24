@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="admin-layout">
+
+        <aside class="sidebar">
+            <h2>Admin</h2>
+            <ul>
+                <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ path('user_index') }}">Utilisateurs</a></li>
+                <li><a href="{{ path('enfant_index') }}">Enfants</a></li>
+                <li><a href="{{ path('periode_index') }}">Périodes</a></li>
+                <li><a href="{{ path('matiere_index') }}">Matières</a></li>
+                <li><a href="{{ path('note_index') }}">Notes</a></li>
+                <li><a href="{{ path('evaluation_index') }}">Évaluations</a></li>
+                <li><a href="{{ path('remuneration_index') }}">Récompenses</a></li>
+            </ul>
+        </aside>
+
+        <main class="content">
+            {% block admin_content %}{% endblock %}
+        </main>
+
+    </div>
+
+    <style>
+        .admin-layout {
+            display: flex;
+            min-height: 90vh;
+        }
+        .sidebar {
+            width: 220px;
+            background: #2c3e50;
+            padding: 20px;
+            color: white;
+        }
+        .sidebar h2 {
+            margin-bottom: 20px;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar li {
+            margin: 12px 0;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+        }
+        .content {
+            flex: 1;
+            padding: 30px;
+        }
+    </style>
+
+{% endblock %}
