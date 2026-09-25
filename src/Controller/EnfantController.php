@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Enfant;
+use App\Entity\User;
 use App\Form\EnfantType;
 use App\Repository\EnfantRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,7 +31,17 @@ class EnfantController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var User $user */
+            $user = $this->getUser();
+
+            // On récupère le groupe du parent
+            $group = $user->getFamilyGroups()->first();
+
+            // On associe l’enfant au groupe
+            $group->addEnfant($enfant);
+
             $em->persist($enfant);
+            $em->persist($group);
             $em->flush();
 
             return $this->redirectToRoute('enfant_index');

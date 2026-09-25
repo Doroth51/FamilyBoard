@@ -32,9 +32,6 @@ class Note
     #[ORM\ManyToOne(inversedBy: 'notes')]
     private ?Enfant $enfant = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $matiere = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $libelle = null;
 
@@ -43,6 +40,9 @@ class Note
 
     #[ORM\ManyToOne(inversedBy: 'notes')]
     private ?Remuneration $remuneration = null;
+
+    #[ORM\ManyToOne(inversedBy: 'notes')]
+    private ?Matiere $matiere = null;
 
     public function getId(): ?int
     {
@@ -121,18 +121,6 @@ class Note
         return $this;
     }
 
-    public function getMatiere(): ?string
-    {
-        return $this->matiere;
-    }
-
-    public function setMatiere(string $matiere): self
-    {
-        $this->matiere = $matiere;
-
-        return $this;
-    }
-
     public function getLibelle(): ?string
     {
         return $this->libelle;
@@ -165,6 +153,18 @@ class Note
     public function setRemuneration(?Remuneration $remuneration): self
     {
         $this->remuneration = $remuneration;
+
+        return $this;
+    }
+
+    public function getMatiere(): ?Matiere
+    {
+        return $this->matiere;
+    }
+
+    public function setMatiere(?Matiere $matiere): static
+    {
+        $this->matiere = $matiere;
 
         return $this;
     }

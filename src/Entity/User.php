@@ -40,6 +40,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: FamilyGroup::class, mappedBy: 'users')]
     private Collection $familyGroups;
 
+    #[ORM\Column(length: 255)]
+    private ?string $FamilyName = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $nom = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $prenom = null;
+
     public function __construct()
     {
         $this->familyGroups = new ArrayCollection();
@@ -143,6 +152,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->familyGroups->removeElement($familyGroup)) {
             $familyGroup->removeUser($this);
         }
+
+        return $this;
+    }
+
+    public function getFamilyName(): ?string
+    {
+        return $this->FamilyName;
+    }
+
+    public function setFamilyName(string $FamilyName): self
+    {
+        $this->FamilyName = $FamilyName;
+
+        return $this;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(string $nom): self
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(string $prenom): self
+    {
+        $this->prenom = $prenom;
 
         return $this;
     }

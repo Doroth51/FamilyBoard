@@ -18,9 +18,6 @@ class Enfant
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $classe = null;
-
     /**
      * @var Collection<int, FamilyGroup>
      */
@@ -44,6 +41,9 @@ class Enfant
      */
     #[ORM\OneToMany(targetEntity: Evaluation::class, mappedBy: 'enfant')]
     private Collection $evaluations;
+
+    #[ORM\ManyToOne(inversedBy: 'enfants')]
+    private ?Classe $classe = null;
 
     public function __construct()
     {
@@ -70,17 +70,7 @@ class Enfant
         return $this;
     }
 
-    public function getClasse(): ?string
-    {
-        return $this->classe;
-    }
 
-    public function setClasse(string $classe): self
-    {
-        $this->classe = $classe;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, FamilyGroup>
@@ -193,6 +183,18 @@ class Enfant
                 $evaluation->setEnfant(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getClasse(): ?Classe
+    {
+        return $this->classe;
+    }
+
+    public function setClasse(?Classe $classe): self
+    {
+        $this->classe = $classe;
 
         return $this;
     }

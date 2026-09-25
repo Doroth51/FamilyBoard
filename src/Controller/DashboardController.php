@@ -24,6 +24,7 @@ class DashboardController extends AbstractController
     public function parent(
         EnfantRepository $enfantRepo,
         PeriodeRepository $periodeRepo,
+        NoteRepository $noteRepo,
         PeriodeSyntheseService $periodeSyntheseService
     ): Response {
         $enfants = $enfantRepo->findAll();
@@ -35,6 +36,7 @@ class DashboardController extends AbstractController
 
         return $this->render('dashboard/parent.html.twig', [
             'enfants' => $enfants,
+            'notes' => $noteRepo,
             'syntheses' => $syntheses,
             'periodes' => $periodeRepo->findAll(),
         ]);

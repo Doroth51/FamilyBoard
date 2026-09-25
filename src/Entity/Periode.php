@@ -36,6 +36,9 @@ class Periode
     #[ORM\OneToMany(targetEntity: Evaluation::class, mappedBy: 'periode')]
     private Collection $enfant;
 
+    #[ORM\ManyToOne(inversedBy: 'periode')]
+    private ?PeriodeType $periodeType = null;
+
     public function __construct()
     {
         $this->notes = new ArrayCollection();
@@ -139,6 +142,18 @@ class Periode
                 $enfant->setPeriode(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPeriodeType(): ?PeriodeType
+    {
+        return $this->periodeType;
+    }
+
+    public function setPeriodeType(?PeriodeType $periodeType): static
+    {
+        $this->periodeType = $periodeType;
 
         return $this;
     }

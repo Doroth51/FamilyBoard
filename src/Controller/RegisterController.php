@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\FamilyGroup;
 use App\Form\RegisterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,7 +32,13 @@ class RegisterController extends AbstractController
 
             $user->setRoles(['ROLE_PARENT']);
 
+            // Création du groupe familial
+            $group = new FamilyGroup();
+            $group->setName($user->getFamilyName());
+            $group->addUser($user);
+
             $em->persist($user);
+            $em->persist($group);
             $em->flush();
 
             return $this->redirectToRoute('app_login');
