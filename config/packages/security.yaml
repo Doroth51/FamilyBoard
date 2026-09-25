@@ -24,11 +24,11 @@ security:
 
             entry_point: form_login # ← obligatoire si plusieurs authenticators
 
-            custom_authenticator: App\Security\AppCustomAuthenticator
-
             form_login:
                 login_path: app_login
                 check_path: app_login
+                username_parameter: email
+                password_parameter: password
                 default_target_path: dashboard_parent
 
             logout:
