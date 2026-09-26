@@ -72,4 +72,14 @@
         </table>
     {% endfor %}
 
+    <div class="mt-4">
+        <a href="{{ path('invite_parent', { id: group.id }) }}" class="btn btn-primary">
+            Inviter un parent
+        </a>
+
+        <a href="{{ path('invitations_list', { id: group.id }) }}" class="btn btn-secondary ms-2">
+            Voir les invitations envoyées
+        </a>
+    </div>
+
 {% endblock %}

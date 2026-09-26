@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Remuneration;
-use App\Form\RemunerationType;
+use App\Form\RemunerationFormType;
 use App\Repository\RemunerationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,7 +26,7 @@ class RemunerationController extends AbstractController
     public function new(Request $request, EntityManagerInterface $em): Response
     {
         $rem = new Remuneration();
-        $form = $this->createForm(RemunerationType::class, $rem);
+        $form = $this->createForm(RemunerationFormType::class, $rem);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -52,7 +52,7 @@ class RemunerationController extends AbstractController
     #[Route('/{id}/edit', name: 'remuneration_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Remuneration $rem, EntityManagerInterface $em): Response
     {
-        $form = $this->createForm(RemunerationType::class, $rem);
+        $form = $this->createForm(RemunerationFormType::class, $rem);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

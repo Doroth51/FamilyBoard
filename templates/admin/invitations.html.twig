@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Invitations envoyées{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+
+        <h1>Invitations envoyées</h1>
+
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Groupe</th>
+                    <th>Envoyée le</th>
+                    <th>Expire le</th>
+                    <th>Token</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for invitation in invitations %}
+                    <tr>
+                        <td>{{ invitation.email }}</td>
+                        <td>{{ invitation.familyGroup.name }}</td>
+                        <td>{{ invitation.createdAt|date('d/m/Y H:i') }}</td>
+                        <td>{{ invitation.expiresAt|date('d/m/Y H:i') }}</td>
+                        <td>{{ invitation.token }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">
+                            Aucune invitation envoyée.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+{% endblock %}

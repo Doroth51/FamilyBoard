@@ -1,21 +1,84 @@
-{% extends 'admin/base_admin.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block admin_content %}
-    <h1>Dashboard Administrateur</h1>
+{% block title %}Administration FamilyBoard{% endblock %}
 
-    <p>Bienvenue dans l’espace d’administration de FamilyBoard.</p>
+{% block body %}
+    <div class="admin-layout">
 
-    <div class="cards">
-        <a href="{{ path('user_index') }}" class="card">Utilisateurs</a>
-        <a href="{{ path('enfant_index') }}" class="card">Enfants</a>
-        <a href="{{ path('periode_index') }}" class="card">Périodes</a>
-        <a href="{{ path('matiere_index') }}" class="card">Matières</a>
-        <a href="{{ path('note_index') }}" class="card">Notes</a>
-        <a href="{{ path('evaluation_index') }}" class="card">Évaluations</a>
-        <a href="{{ path('remuneration_index') }}" class="card">Récompenses</a>
+        <aside class="sidebar">
+            <h2>Administration</h2>
+            <ul>
+                <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ path('user_index') }}">Parents</a></li>
+                <li><a href="{{ path('familygroup_index') }}">Groupes familiaux</a></li>
+                <li><a href="{{ path('enfant_index') }}">Enfants</a></li>
+                <li><a href="{{ path('matiere_index') }}">Matières</a></li>
+                <li><a href="{{ path('periode_index') }}">Périodes</a></li>
+                <li><a href="{{ path('note_index') }}">Notes</a></li>
+                <li><a href="{{ path('evaluation_index') }}">Évaluations</a></li>
+                <li><a href="{{ path('admin_invitations') }}">Invitations</a></li>
+            </ul>
+        </aside>
+
+        <main class="content">
+            <h1>Dashboard Administrateur</h1>
+
+            <div class="cards">
+
+                <a href="{{ path('user_index') }}" class="card">
+                    <h3>Parents</h3>
+                    <p>{{ users|length }} comptes</p>
+                </a>
+
+                <a href="{{ path('familygroup_index') }}" class="card">
+                    <h3>Groupes familiaux</h3>
+                    <p>{{ groups|length }} groupes</p>
+                </a>
+
+                <a href="{{ path('enfant_index') }}" class="card">
+                    <h3>Enfants</h3>
+                    <p>{{ enfants|length }} enfants</p>
+                </a>
+
+                <a href="{{ path('admin_invitations') }}" class="card">
+                    <h3>Invitations</h3>
+                    <p>{{ invitations|length }} invitations envoyées</p>
+                </a>
+
+            </div>
+        </main>
+
     </div>
 
     <style>
+        .admin-layout {
+            display: flex;
+            min-height: 90vh;
+        }
+        .sidebar {
+            width: 240px;
+            background: #2c3e50;
+            padding: 20px;
+            color: white;
+        }
+        .sidebar h2 {
+            margin-bottom: 20px;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar li {
+            margin: 12px 0;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+        }
+        .content {
+            flex: 1;
+            padding: 30px;
+        }
         .cards {
             display: flex;
             flex-wrap: wrap;
@@ -25,7 +88,7 @@
             background: #ecf0f1;
             padding: 20px;
             border-radius: 8px;
-            width: 200px;
+            width: 220px;
             text-align: center;
             text-decoration: none;
             color: #2c3e50;
@@ -36,4 +99,5 @@
             background: #bdc3c7;
         }
     </style>
+
 {% endblock %}

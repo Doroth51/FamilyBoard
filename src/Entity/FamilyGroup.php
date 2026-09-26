@@ -30,10 +30,17 @@ class FamilyGroup
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'familyGroups')]
     private Collection $users;
 
+    /**
+     * @var Collection<int, Invitation>
+     */
+    #[ORM\OneToMany(targetEntity: Invitation::class, mappedBy: 'familyGroup')]
+    private Collection $invitations;
+
     public function __construct()
     {
         $this->enfants = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->invitations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -103,6 +110,36 @@ class FamilyGroup
         if ($this->users->removeElement($user)) {
             $user->removeFamilyGroup($this);
         }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Invitation>
+     */
+    public function getInvitations(): Collection
+    {
+        return $this->invitations;
+    }
+
+    public function addInvitation(Invitation $invitation): static
+    {
+        if (!$this->invitations->contains($invitation)) {
+            $this->invitations->add($invitation);
+            $invitation->setFamilyGroup($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvitation(Invitation $invitation): static
+    {
+        if ($this->invitations->removeElement($invitation)) {
+            // set the owning side to null (unless already changed)
+            if ($invitation->getFamilyGroup() === $this) {
+                $invitation->setFamilyGroup(null);
+            }
+        }
+
         return $this;
     }
 }
