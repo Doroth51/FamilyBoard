@@ -27,7 +27,7 @@ class Note
     private ?\DateTime $date = null;
 
     #[ORM\Column(nullable: true)]
-    private ?bool $isremuneration = null;
+    private ?bool $isRemuneration = null;
 
     #[ORM\ManyToOne(inversedBy: 'notes')]
     private ?Enfant $enfant = null;
@@ -99,12 +99,12 @@ class Note
 
     public function isRemuneration(): ?bool
     {
-        return $this->isremuneration;
+        return $this->isRemuneration;
     }
 
-    public function setIsRemuneration(?bool $isremuneration): self
+    public function setIsRemuneration(?bool $isRemuneration): self
     {
-        $this->isremuneration = $isremuneration;
+        $this->isRemuneration = $isRemuneration;
 
         return $this;
     }
@@ -162,7 +162,7 @@ class Note
         return $this->matiere;
     }
 
-    public function setMatiere(?Matiere $matiere): static
+    public function setMatiere(?Matiere $matiere): self
     {
         $this->matiere = $matiere;
 

@@ -23,13 +23,10 @@ class Evaluation
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $date = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $matiere = null;
-
     #[ORM\Column(nullable: true)]
-    private ?bool $isremuneration = null;
+    private ?bool $isRemuneration = null;
 
-    #[ORM\ManyToOne(inversedBy: 'periode')]
+    #[ORM\ManyToOne(inversedBy: 'evaluations')]
     private ?Periode $periode = null;
 
     #[ORM\ManyToOne(inversedBy: 'evaluations')]
@@ -37,6 +34,9 @@ class Evaluation
 
     #[ORM\ManyToOne(inversedBy: 'evaluations')]
     private ?Remuneration $remuneration = null;
+
+    #[ORM\ManyToOne(inversedBy: 'evaluations')]
+    private ?Matiere $matiere = null;
 
     public function getId(): ?int
     {
@@ -79,18 +79,6 @@ class Evaluation
         return $this;
     }
 
-    public function getMatiere(): ?string
-    {
-        return $this->matiere;
-    }
-
-    public function setMatiere(string $matiere): self
-    {
-        $this->matiere = $matiere;
-
-        return $this;
-    }
-
     public function getPeriode(): ?Periode
     {
         return $this->periode;
@@ -129,12 +117,24 @@ class Evaluation
 
     public function isRemuneration(): ?bool
     {
-        return $this->isremuneration;
+        return $this->isRemuneration;
     }
 
-    public function setIsRemuneration(?bool $isremuneration): self
+    public function setIsRemuneration(?bool $isRemuneration): self
     {
-        $this->isremuneration = $isremuneration;
+        $this->isRemuneration = $isRemuneration;
+
+        return $this;
+    }
+
+    public function getMatiere(): ?Matiere
+    {
+        return $this->matiere;
+    }
+
+    public function setMatiere(?Matiere $matiere): self
+    {
+        $this->matiere = $matiere;
 
         return $this;
     }

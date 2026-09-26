@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Enfant;
 use App\Entity\Note;
 use App\Form\NoteType;
 use App\Repository\NoteRepository;
@@ -23,10 +24,12 @@ class NoteController extends AbstractController
     }
 
     #[Route('/new', name: 'note_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $em): Response
+    public function new(Enfant $enfant, Request $request, EntityManagerInterface $em): Response
     {
         $note = new Note();
-        $form = $this->createForm(NoteType::class, $note);
+        $form = $this->createForm(NoteType::class, $note, [
+            'enfant' => $enfant
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

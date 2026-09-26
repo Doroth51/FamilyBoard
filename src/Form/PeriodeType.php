@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Periode;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,16 +17,17 @@ class PeriodeType extends AbstractType
         $builder
             ->add('type', ChoiceType::class, [
                 'choices' => [
-                    'Trimestre' => 'TRIMESTRE',
-                    'Semestre' => 'SEMESTRE',
+                    'Trimestre' => 'trimestre',
+                    'Semestre' => 'semestre',
                 ],
                 'label' => 'Type'
             ])
             ->add('numero', IntegerType::class, [
                 'label' => 'Numéro'
             ])
-            ->add('annee', IntegerType::class, [
-                'label' => 'Année scolaire'
+            ->add('annee', TextType::class, [
+                'label' => 'Année scolaire',
+                'help' => 'Exemple : 2024-2025'
             ]);
     }
 

@@ -34,7 +34,7 @@ class UserType extends AbstractType
             ->add('password', PasswordType::class, [
                 'label' => 'Mot de passe',
                 'required' => false,
-                'mapped' => true,
+                'mapped' => false,
             ])
 
             ->add('familyGroups', EntityType::class, [

@@ -100,8 +100,9 @@ class FamilyGroup
 
     public function removeUser(User $user): self
     {
-        $this->users->removeElement($user);
-
+        if ($this->users->removeElement($user)) {
+            $user->removeFamilyGroup($this);
+        }
         return $this;
     }
 }

@@ -41,7 +41,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $familyGroups;
 
     #[ORM\Column(length: 255)]
-    private ?string $FamilyName = null;
+    private ?string $familyName  = null;
 
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
@@ -156,14 +156,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getFamilyName(): ?string
+    public function  getFamilyName(): ?string
     {
-        return $this->FamilyName;
+        return $this->familyName;
     }
 
-    public function setFamilyName(string $FamilyName): self
+    public function setFamilyName(string $familyName): self
     {
-        $this->FamilyName = $FamilyName;
+        $this->familyName  = $familyName;
 
         return $this;
     }

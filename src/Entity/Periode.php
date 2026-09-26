@@ -15,34 +15,28 @@ class Periode
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    // 'semestre' ou 'trimestre'
+    #[ORM\Column(length: 20)]
     private ?string $type = null;
 
+    // 1, 2, 3
     #[ORM\Column]
     private ?int $numero = null;
 
-    #[ORM\Column(length: 255)]
+    // Exemple : '2024-2025'
+    #[ORM\Column(length: 20)]
     private ?string $annee = null;
 
-    /**
-     * @var Collection<int, Note>
-     */
     #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'periode')]
     private Collection $notes;
 
-    /**
-     * @var Collection<int, Evaluation>
-     */
     #[ORM\OneToMany(targetEntity: Evaluation::class, mappedBy: 'periode')]
-    private Collection $enfant;
-
-    #[ORM\ManyToOne(inversedBy: 'periode')]
-    private ?PeriodeType $periodeType = null;
+    private Collection $evaluations;
 
     public function __construct()
     {
         $this->notes = new ArrayCollection();
-        $this->enfant = new ArrayCollection();
+        $this->evaluations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -58,7 +52,6 @@ class Periode
     public function setType(string $type): self
     {
         $this->type = $type;
-
         return $this;
     }
 
@@ -70,7 +63,6 @@ class Periode
     public function setNumero(int $numero): self
     {
         $this->numero = $numero;
-
         return $this;
     }
 
@@ -82,7 +74,6 @@ class Periode
     public function setAnnee(string $annee): self
     {
         $this->annee = $annee;
-
         return $this;
     }
 
@@ -100,61 +91,43 @@ class Periode
             $this->notes->add($note);
             $note->setPeriode($this);
         }
-
         return $this;
     }
 
     public function removeNote(Note $note): self
     {
         if ($this->notes->removeElement($note)) {
-            // set the owning side to null (unless already changed)
             if ($note->getPeriode() === $this) {
                 $note->setPeriode(null);
             }
         }
-
         return $this;
     }
 
     /**
      * @return Collection<int, Evaluation>
      */
-    public function getEnfant(): Collection
+    public function getEvaluations(): Collection
     {
-        return $this->enfant;
+        return $this->evaluations;
     }
 
-    public function addEnfant(Evaluation $enfant): static
+    public function addEvaluation(Evaluation $evaluation): self
     {
-        if (!$this->enfant->contains($enfant)) {
-            $this->enfant->add($enfant);
-            $enfant->setPeriode($this);
+        if (!$this->evaluations->contains($evaluation)) {
+            $this->evaluations->add($evaluation);
+            $evaluation->setPeriode($this);
         }
-
         return $this;
     }
 
-    public function removeEnfant(Evaluation $enfant): static
+    public function removeEvaluation(Evaluation $evaluation): self
     {
-        if ($this->enfant->removeElement($enfant)) {
-            // set the owning side to null (unless already changed)
-            if ($enfant->getPeriode() === $this) {
-                $enfant->setPeriode(null);
+        if ($this->evaluations->removeElement($evaluation)) {
+            if ($evaluation->getPeriode() === $this) {
+                $evaluation->setPeriode(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getPeriodeType(): ?PeriodeType
-    {
-        return $this->periodeType;
-    }
-
-    public function setPeriodeType(?PeriodeType $periodeType): static
-    {
-        $this->periodeType = $periodeType;
-
         return $this;
     }
 }

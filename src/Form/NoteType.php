@@ -3,12 +3,12 @@
 namespace App\Form;
 
 use App\Entity\Note;
-use App\Entity\Enfant;
+use App\Entity\Matiere;
 use App\Entity\Periode;
+use App\Repository\PeriodeRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,8 +16,12 @@ class NoteType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $enfant = $options['enfant'];
+
         $builder
-            ->add('matiere', TextType::class, [
+            ->add('matiere', EntityType::class, [
+                'class' => Matiere::class,
+                'choice_label' => 'name',
                 'label' => 'Matière'
             ])
             ->add('note', IntegerType::class, [
@@ -33,14 +37,15 @@ class NoteType extends AbstractType
                 'widget' => 'single_text',
                 'label' => 'Date'
             ])
-            ->add('enfant', EntityType::class, [
-                'class' => Enfant::class,
-                'choice_label' => 'name',
-                'label' => 'Enfant'
-            ])
             ->add('periode', EntityType::class, [
                 'class' => Periode::class,
-                'choice_label' => fn($p) => $p->getType() . ' ' . $p->getNumero() . ' ' . $p->getAnnee(),
+                'choice_label' => fn(Periode $p) => $p->getType() . ' ' . $p->getNumero(),
+                'query_builder' => function (PeriodeRepository $repo) use ($enfant) {
+                    return $repo->createQueryBuilder('p')
+                        ->where('p.type = :type')
+                        ->setParameter('type', $enfant->getPeriodeType())
+                        ->orderBy('p.numero', 'ASC');
+                },
                 'label' => 'Période'
             ]);
     }
@@ -49,6 +54,7 @@ class NoteType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Note::class,
+            'enfant' => null,
         ]);
     }
 }

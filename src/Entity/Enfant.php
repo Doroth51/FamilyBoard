@@ -18,6 +18,12 @@ class Enfant
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[ORM\Column(length: 20)]
+    private ?string $periodeType = null; // 'semestre' ou 'trimestre'
+
+    #[ORM\Column(length: 20)]
+    private ?string $evaluationMode = null; // 'note' ou 'evaluation'
+
     /**
      * @var Collection<int, FamilyGroup>
      */
@@ -43,6 +49,7 @@ class Enfant
     private Collection $evaluations;
 
     #[ORM\ManyToOne(inversedBy: 'enfants')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Classe $classe = null;
 
     public function __construct()
@@ -70,12 +77,33 @@ class Enfant
         return $this;
     }
 
+    public function getPeriodeType(): ?string
+    {
+        return $this->periodeType;
+    }
+
+    public function setPeriodeType(string $type): self
+    {
+        $this->periodeType = $type;
+        return $this;
+    }
+
+    public function getEvaluationMode(): ?string
+    {
+        return $this->evaluationMode;
+    }
+
+    public function setEvaluationMode(string $mode): self
+    {
+        $this->evaluationMode = $mode;
+        return $this;
+    }
 
 
     /**
      * @return Collection<int, FamilyGroup>
      */
-    public function getFamilyGroup(): Collection
+    public function getFamilyGroups(): Collection
     {
         return $this->familyGroups;
     }
