@@ -15,3 +15,13 @@ body {
 .badge-ms  { background-color: #3498db; }   /* Bleu */
 .badge-mi  { background-color: #e67e22; }   /* Orange */
 .badge-cna { background-color: #e74c3c; }   /* Rouge */
+
+.features h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.features p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+}

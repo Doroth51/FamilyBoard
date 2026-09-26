@@ -43,6 +43,14 @@
                             </li>
 
                         {% else %}
+                            {% if app.request.attributes.get('_route') != 'home' %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('home') }}">
+                                        Accueil
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ path('app_login') }}">
                                     Connexion
@@ -51,7 +59,7 @@
 
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ path('app_register') }}">
-                                    Accueil
+                                    Inscription
                                 </a>
                             </li>
                         {% endif %}
