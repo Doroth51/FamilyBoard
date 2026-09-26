@@ -1,35 +1,56 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Inscription — FamilyBoard{% endblock %}
+{% block title %}Créer un compte — FamilyBoard{% endblock %}
 
 {% block body %}
-    <div class="register-container">
-        <h1>Créer un compte</h1>
+    <div class="container py-5">
 
-        {{ form_start(form) }}
-        {{ form_row(form.email) }}
-        {{ form_row(form.password) }}
+        <div class="row justify-content-center">
+            <div class="col-md-5">
 
-        <button class="btn btn-secondary">Créer mon compte</button>
-        {{ form_end(form) }}
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
 
-        <p class="login-link">
-            Déjà inscrit ?
-            <a href="{{ path('app_login') }}">Connexion</a>
-        </p>
+                        <h2 class="mb-4 text-center">Créer un compte</h2>
+
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger">{{ message }}</div>
+                        {% endfor %}
+
+                        {{ form_start(form) }}
+
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.email, { attr: { class: 'form-control', placeholder: 'Email' } }) }}
+                            {{ form_label(form.email) }}
+                            {{ form_errors(form.email) }}
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.password.first, { attr: { class: 'form-control', placeholder: 'Mot de passe' } }) }}
+                            {{ form_label(form.password.first) }}
+                            {{ form_errors(form.password.first) }}
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.password.second, { attr: { class: 'form-control', placeholder: 'Confirmer le mot de passe' } }) }}
+                            {{ form_label(form.password.second) }}
+                            {{ form_errors(form.password.second) }}
+                        </div>
+
+                        <button class="btn btn-success w-100 py-2">Créer mon compte</button>
+
+                        {{ form_end(form) }}
+
+                        <p class="text-center mt-3">
+                            Déjà un compte ?
+                            <a href="{{ path('app_login') }}">Se connecter</a>
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
-
-    <style>
-        .register-container {
-            max-width: 400px;
-            margin: 60px auto;
-            padding: 30px;
-            border-radius: 10px;
-            background: #f9f9f9;
-            text-align: center;
-        }
-        .login-link {
-            margin-top: 20px;
-        }
-    </style>
 {% endblock %}

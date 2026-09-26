@@ -3,57 +3,65 @@
 {% block title %}Connexion — FamilyBoard{% endblock %}
 
 {% block body %}
-    <div class="login-container">
-        <h1>Connexion</h1>
+    <div class="container py-5">
 
-        {% if error %}
-            <div class="error">Identifiants incorrects</div>
-        {% endif %}
+        <div class="row justify-content-center">
+            <div class="col-md-5">
 
-        <form method="post">
-            <label>Email</label>
-            <input type="email" name="email" value="{{ last_username }}" required>
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
 
-            <label>Mot de passe</label>
-            <input type="password" name="password" required>
+                        <h2 class="mb-4 text-center">Connexion</h2>
 
-            <button class="btn btn-primary">Se connecter</button>
-        </form>
+                        {% if error %}
+                            <div class="alert alert-danger">
+                                Identifiants incorrects
+                            </div>
+                        {% endif %}
 
-        <p class="register-link">
-            Pas encore de compte ?
-            <a href="{{ path('app_register') }}">Créer un compte</a>
-        </p>
+                        <form method="post">
+
+                            <div class="form-floating mb-3">
+                                <input
+                                    type="email"
+                                    name="username"
+                                    value="{{ last_username }}"
+                                    class="form-control"
+                                    id="loginEmail"
+                                    placeholder="Adresse email"
+                                    required
+                                >
+                                <label for="loginEmail">Adresse email</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input
+                                    type="password"
+                                    name="password"
+                                    class="form-control"
+                                    id="loginPassword"
+                                    placeholder="Mot de passe"
+                                    required
+                                >
+                                <label for="loginPassword">Mot de passe</label>
+                            </div>
+
+                            <button class="btn btn-primary w-100 py-2">
+                                Se connecter
+                            </button>
+
+                        </form>
+
+                        <p class="text-center mt-3">
+                            Pas encore de compte ?
+                            <a href="{{ path('app_register') }}">Créer un compte</a>
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
-
-    <style>
-        .login-container {
-            max-width: 400px;
-            margin: 60px auto;
-            padding: 30px;
-            border-radius: 10px;
-            background: #f9f9f9;
-            text-align: center;
-        }
-        label {
-            display: block;
-            margin-top: 15px;
-            text-align: left;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-        }
-        .error {
-            background: #e74c3c;
-            color: white;
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-        }
-        .register-link {
-            margin-top: 20px;
-        }
-    </style>
 {% endblock %}

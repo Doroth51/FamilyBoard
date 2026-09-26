@@ -1,103 +1,51 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Administration FamilyBoard{% endblock %}
+{% block title %}Administration{% endblock %}
 
 {% block body %}
-    <div class="admin-layout">
+    <div class="container py-4">
 
-        <aside class="sidebar">
-            <h2>Administration</h2>
-            <ul>
-                <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                <li><a href="{{ path('user_index') }}">Parents</a></li>
-                <li><a href="{{ path('familygroup_index') }}">Groupes familiaux</a></li>
-                <li><a href="{{ path('enfant_index') }}">Enfants</a></li>
-                <li><a href="{{ path('matiere_index') }}">Matières</a></li>
-                <li><a href="{{ path('periode_index') }}">Périodes</a></li>
-                <li><a href="{{ path('note_index') }}">Notes</a></li>
-                <li><a href="{{ path('evaluation_index') }}">Évaluations</a></li>
-                <li><a href="{{ path('admin_invitations') }}">Invitations</a></li>
-            </ul>
-        </aside>
+        <h1 class="mb-4">Administration FamilyBoard</h1>
 
-        <main class="content">
-            <h1>Dashboard Administrateur</h1>
+        <div class="row g-3">
 
-            <div class="cards">
-
-                <a href="{{ path('user_index') }}" class="card">
-                    <h3>Parents</h3>
-                    <p>{{ users|length }} comptes</p>
+            <div class="col-12 col-md-4">
+                <a href="{{ path('user_index') }}" class="text-decoration-none">
+                    <div class="card shadow-sm p-3 text-center">
+                        <h5>Parents</h5>
+                        <p class="display-6">{{ users|length }}</p>
+                    </div>
                 </a>
-
-                <a href="{{ path('familygroup_index') }}" class="card">
-                    <h3>Groupes familiaux</h3>
-                    <p>{{ groups|length }} groupes</p>
-                </a>
-
-                <a href="{{ path('enfant_index') }}" class="card">
-                    <h3>Enfants</h3>
-                    <p>{{ enfants|length }} enfants</p>
-                </a>
-
-                <a href="{{ path('admin_invitations') }}" class="card">
-                    <h3>Invitations</h3>
-                    <p>{{ invitations|length }} invitations envoyées</p>
-                </a>
-
             </div>
-        </main>
+
+            <div class="col-12 col-md-4">
+                <a href="{{ path('familygroup_index') }}" class="text-decoration-none">
+                    <div class="card shadow-sm p-3 text-center">
+                        <h5>Groupes familiaux</h5>
+                        <p class="display-6">{{ groups|length }}</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <a href="{{ path('enfant_index') }}" class="text-decoration-none">
+                    <div class="card shadow-sm p-3 text-center">
+                        <h5>Enfants</h5>
+                        <p class="display-6">{{ enfants|length }}</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <a href="{{ path('admin_invitations') }}" class="text-decoration-none">
+                    <div class="card shadow-sm p-3 text-center">
+                        <h5>Invitations</h5>
+                        <p class="display-6">{{ invitations|length }}</p>
+                    </div>
+                </a>
+            </div>
+
+        </div>
 
     </div>
-
-    <style>
-        .admin-layout {
-            display: flex;
-            min-height: 90vh;
-        }
-        .sidebar {
-            width: 240px;
-            background: #2c3e50;
-            padding: 20px;
-            color: white;
-        }
-        .sidebar h2 {
-            margin-bottom: 20px;
-        }
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-        .sidebar li {
-            margin: 12px 0;
-        }
-        .sidebar a {
-            color: white;
-            text-decoration: none;
-        }
-        .content {
-            flex: 1;
-            padding: 30px;
-        }
-        .cards {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .card {
-            background: #ecf0f1;
-            padding: 20px;
-            border-radius: 8px;
-            width: 220px;
-            text-align: center;
-            text-decoration: none;
-            color: #2c3e50;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-        .card:hover {
-            background: #bdc3c7;
-        }
-    </style>
-
 {% endblock %}
