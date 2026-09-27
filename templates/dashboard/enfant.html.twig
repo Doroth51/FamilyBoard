@@ -1,224 +1,142 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Dashboard Enfant{% endblock %}
+{% block title %}Dashboard — {{ enfant.name }}{% endblock %}
 
 {% block body %}
-    <h1>{{ enfant.name }} — {{ enfant.classe }}</h1>
+    <div class="container py-4">
 
-    <hr>
-
-    {# ===========================
-   NOTES
-   =========================== #}
-    <h2>Notes</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Matière</th>
-                <th>Note</th>
-                <th>Coef</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for note in notes %}
-                <tr>
-                    <td>{{ note.matiere }}</td>
-                    <td>{{ note.note }}/{{ note.denominateur }}</td>
-                    <td>{{ note.coefficient }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <hr>
-
-    {# ===========================
-   ÉVALUATIONS
-   =========================== #}
-    <h2>Évaluations</h2>
-    <ul>
-        {% for eval in evaluations %}
-            <li>
-                {{ eval.matiere }} :
-                {% if eval.niveau == 'TBM' %}
-                    <span class="badge badge-tbm">Très bonne maîtrise</span>
-                {% elseif eval.niveau == 'MS' %}
-                    <span class="badge badge-ms">Maîtrise suffisante</span>
-                {% elseif eval.niveau == 'MI' %}
-                    <span class="badge badge-mi">Maîtrise insuffisante</span>
-                {% elseif eval.niveau == 'CNA' %}
-                    <span class="badge badge-cna">Non acquis</span>
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
-
-    <hr>
-
-    {# ===========================
-   RÉMUNÉRATIONS
-   =========================== #}
-    <h2>Rémunérations</h2>
-    <ul>
-        {% for r in remunerations %}
-            <li>{{ r.date|date('d/m/Y') }} — {{ r.montant }} € ({{ r.type.name }})</li>
-        {% endfor %}
-    </ul>
-
-    <hr>
-
-    {# ===========================
-   RÉCOMPENSES
-   =========================== #}
-    <h2>Récompenses</h2>
-    <p>Total : {{ synthese.total }} €</p>
-
-    <h3>Par type</h3>
-    <ul>
-        {% for type, montant in synthese.parType %}
-            <li>{{ type }} : {{ montant }} €</li>
-        {% endfor %}
-    </ul>
-
-    <hr>
-
-    {# ===========================
-   PROGRESSION PAR PÉRIODE
-   =========================== #}
-    <h2>Progression</h2>
-
-    {% for periodeId, item in progression %}
-        <div class="periode-block">
-            <h3>{{ item.periode.type }} {{ item.periode.numero }} — {{ item.periode.annee }}</h3>
-
-            <p>Moyenne : {{ item.data.moyenne ?? '—' }}</p>
-            <p>Appréciations :
-                {% if item.data.appreciation %}
-                    {% set score = item.data.appreciation %}
-                    {% if score >= 3.5 %}
-                        <span class="badge badge-tbm">Excellent</span>
-                    {% elseif score >= 2.5 %}
-                        <span class="badge badge-ms">Bon</span>
-                    {% elseif score >= 1.5 %}
-                        <span class="badge badge-mi">Faible</span>
-                    {% else %}
-                        <span class="badge badge-cna">Insuffisant</span>
-                    {% endif %}
-                {% else %}
-                    —
-                {% endif %}
-            </p>
-            <p>Score global : {{ item.data.global ?? '—' }}</p>
+        <!-- HEADER -->
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <img src="/images/avatar-default.png" class="rounded-circle" width="80">
+            <div>
+                <h2 class="mb-1">{{ enfant.name }}</h2>
+                <p class="text-muted mb-0">{{ enfant.classe }}</p>
+                <p class="text-muted mb-0">Période : {{ periode.type }} {{ periode.numero }}</p>
+            </div>
         </div>
-    {% endfor %}
 
-    <hr>
+        <!-- PROGRESSION -->
+        <div class="card shadow-sm p-3 mb-4">
+            <h4 class="mb-3">Progression scolaire</h4>
+            <canvas id="progressChart"></canvas>
+        </div>
 
-    {# ===========================
-   RADAR DES MATIÈRES
-   =========================== #}
-    <h2>Radar des matières</h2>
+        <!-- NOTES RÉCENTES -->
+        <div class="card shadow-sm p-3 mb-4">
+            <h4 class="mb-3">Dernières notes</h4>
 
-    <canvas id="matiereRadar"></canvas>
+            {% for note in notes %}
+                <div class="border rounded p-3 mb-2">
+                    <strong>{{ note.matiere.name }}</strong> — {{ note.note }}/{{ note.denominateur }}
+                    <p class="text-muted mb-0">{{ note.appreciation }}</p>
+                </div>
+            {% else %}
+                <p class="text-muted">Aucune note pour le moment.</p>
+            {% endfor %}
+        </div>
 
-    {% set matieres = [] %}
-    {% set moyennesMatieres = [] %}
+        <!-- RÉCOMPENSES -->
+        <div class="card shadow-sm p-3 mb-4">
+            <h4 class="mb-3">Récompenses</h4>
 
-    {% for matiere, moyenne in matiereStats %}
-        {% set matieres = matieres|merge([matiere]) %}
-        {% set moyennesMatieres = moyennesMatieres|merge([moyenne]) %}
-    {% endfor %}
+            <canvas id="rewardChart"></canvas>
 
-    <hr>
+            <ul class="list-group mt-3">
+                {% for r in remunerations %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>{{ r.type.name }} — {{ r.date|date('d/m/Y') }}</span>
+                        <strong>{{ r.montant }} €</strong>
+                    </li>
+                {% else %}
+                    <li class="list-group-item text-muted">Aucune récompense pour le moment.</li>
+                {% endfor %}
+            </ul>
+        </div>
 
-    {# ===========================
-   GRAPHIQUE DE PROGRESSION
-   =========================== #}
-    <h2>Graphique de progression</h2>
+        <!-- OBJECTIFS -->
+        <div class="card shadow-sm p-3 mb-4">
+            <h4 class="mb-3">Objectifs</h4>
 
-    <canvas id="progressionChart"></canvas>
+            {% for objectif in objectifs %}
+                <div class="mb-3">
+                    <strong>{{ objectif.titre }}</strong>
+                    <div class="progress mt-2">
+                        <div
+                            class="progress-bar"
+                            role="progressbar"
+                            style="width: {{ objectif.progression }}%"
+                        >
+                            {{ objectif.progression }}%
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-muted">Aucun objectif défini.</p>
+            {% endfor %}
+        </div>
 
-    {% set labels = [] %}
-    {% set moyennes = [] %}
-    {% set appreciations = [] %}
-    {% set globalScores = [] %}
+        <!-- Section XP + Niveau -->
+        <div class="card shadow-sm p-3 mb-4 text-center">
+            <h4 class="mb-2">Progression du niveau</h4>
 
-    {% for periodeId, item in progression %}
-        {% set labels = labels|merge([item.periode.type ~ ' ' ~ item.periode.numero]) %}
-        {% set moyennes = moyennes|merge([item.data.moyenne ?? 0]) %}
-        {% set appreciations = appreciations|merge([item.data.appreciation ?? 0]) %}
-        {% set globalScores = globalScores|merge([item.data.global ?? 0]) %}
-    {% endfor %}
+            <p class="mb-1">Niveau : <strong>{{ enfant.niveau }}</strong></p>
+            <p class="text-muted">XP : {{ enfant.xp }}/{{ enfant.xpRequiredForNextLevel() }}</p>
+
+            <div class="progress mt-2">
+                <div
+                    class="progress-bar bg-success"
+                    style="width: {{ (enfant.xp / enfant.xpRequiredForNextLevel()) * 100 }}%"
+                >
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Badges -->
+        <div class="card shadow-sm p-3 mb-4">
+            <h4 class="mb-3">Badges obtenus</h4>
+
+            <div class="d-flex flex-wrap gap-3">
+                {% for badge in enfant.badges %}
+                    <div class="border rounded p-3 text-center" style="width: 120px;">
+                        <div class="fs-1">{{ badge.icone }}</div>
+                        <strong>{{ badge.nom }}</strong>
+                        <p class="text-muted small">{{ badge.dateObtention|date('d/m/Y') }}</p>
+                    </div>
+                {% else %}
+                    <p class="text-muted">Aucun badge pour le moment.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-const ctx = document.getElementById('progressionChart');
-const radarCtx = document.getElementById('matiereRadar');
-
-new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: {{ labels|json_encode|raw }},
-        datasets: [
-            {
-                label: 'Moyenne des notes',
-                data: {{ moyennes|json_encode|raw }},
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+    new Chart(document.getElementById('progressChart'), {
+        type: 'line',
+        data: {
+            labels: {{ labels|json_encode|raw }},
+            datasets: [{
+                label: 'Progression',
+                data: {{ progression|json_encode|raw }},
+                borderColor: '#0d6efd',
                 tension: 0.3
-            },
-            {
-                label: 'Score appréciations',
-                data: {{ appreciations|json_encode|raw }},
-                borderColor: 'rgba(54, 162, 235, 1)',
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                tension: 0.3
-            },
-            {
-                label: 'Score global',
-                data: {{ globalScores|json_encode|raw }},
-                borderColor: 'rgba(255, 99, 132, 1)',
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                tension: 0.3
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            y: {
-                beginAtZero: true,
-                max: 20
-            }
+            }]
         }
-    }
-});
+    });
 
-new Chart(radarCtx, {
-    type: 'radar',
-    data: {
-        labels: {{ matieres|json_encode|raw }},
-        datasets: [{
-            label: 'Moyenne par matière',
-            data: {{ moyennesMatieres|json_encode|raw }},
-            backgroundColor: 'rgba(52, 152, 219, 0.2)',
-            borderColor: 'rgba(52, 152, 219, 1)',
-            borderWidth: 2,
-            pointBackgroundColor: 'rgba(52, 152, 219, 1)'
-        }]
-    },
-    options: {
-        scales: {
-            r: {
-                beginAtZero: true,
-                max: 20
-            }
+    new Chart(document.getElementById('rewardChart'), {
+        type: 'bar',
+        data: {
+            labels: {{ rewardLabels|json_encode|raw }},
+            datasets: [{
+                label: 'Récompenses (€)',
+                data: {{ rewardValues|json_encode|raw }},
+                backgroundColor: '#198754'
+            }]
         }
-    }
-});
+    });
 </script>
-
-    <a href="{{ path('dashboard_parent') }}">Retour</a>
-
 {% endblock %}

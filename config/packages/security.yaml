@@ -58,10 +58,14 @@ security:
 
         # Dashboard parent
         - { path: ^/dashboard, roles: ROLE_PARENT }
+        - { path: ^/dashboard/parent, roles: ROLE_PARENT }
         - { path: ^/family, roles: ROLE_PARENT }
 
         # CRUD admin
         - { path: ^/admin, roles: ROLE_ADMIN }
+
+        # Dashboard enfant
+        - { path: ^/dashboard/enfant, roles: ROLE_ENFANT }
 
 when@test:
     security:

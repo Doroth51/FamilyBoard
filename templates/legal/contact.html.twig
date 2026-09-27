@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact — FamilyBoard{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+
+        <h1 class="mb-4">Contact</h1>
+
+        <div class="card shadow-sm p-4">
+
+            <p class="mb-4">
+                Une question ? Un problème ? Une suggestion ?
+                Vous pouvez nous contacter via le formulaire ci-dessous.
+            </p>
+
+            <form method="post">
+
+                <div class="form-floating mb-3">
+                    <input type="text" name="nom" class="form-control" id="nom" placeholder="Nom" required>
+                    <label for="nom">Nom</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input type="email" name="email" class="form-control" id="email" placeholder="Email" required>
+                    <label for="email">Email</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <textarea name="message" class="form-control" id="message" style="height: 150px" placeholder="Message" required></textarea>
+                    <label for="message">Message</label>
+                </div>
+
+                <button class="btn btn-primary w-100 py-2">Envoyer</button>
+
+            </form>
+
+        </div>
+
+    </div>
+{% endblock %}

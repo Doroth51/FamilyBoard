@@ -25,3 +25,27 @@ body {
     font-size: 0.95rem;
     line-height: 1.5;
 }
+
+.hero-section {
+    background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.hero-illustration {
+    opacity: 0.95;
+}
+
+.hero-section {
+    background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.hero-illustration {
+    opacity: 0.95;
+}
+
+.card {
+    border-radius: 14px;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}

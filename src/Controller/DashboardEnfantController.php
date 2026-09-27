@@ -2,58 +2,101 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Enfant;
 use App\Repository\NoteRepository;
-use App\Repository\EvaluationRepository;
+use App\Repository\PeriodeRepository;
 use App\Repository\RemunerationRepository;
-use App\Service\PeriodeSyntheseService;
+use App\Repository\ObjectifRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted('ROLE_PARENT')]
-#[Route('/dashboard/enfant')]
 class DashboardEnfantController extends AbstractController
 {
-    #[Route('/{id}', name: 'dashboard_enfant')]
-    public function enfant(
+    #[Route('/dashboard/enfant/{id}', name: 'dashboard_enfant')]
+    public function index(
         Enfant $enfant,
         NoteRepository $noteRepo,
-        EvaluationRepository $evalRepo,
+        PeriodeRepository $periodeRepo,
         RemunerationRepository $remRepo,
-        PeriodeSyntheseService $syntheseService
+        ObjectifRepository $objRepo
     ): Response {
-        /** @var \App\Entity\User $user */
-        $user = $this->getUser();
 
-        // Vérification que l’enfant appartient au parent
-        $allowed = false;
-        foreach ($user->getFamilyGroups() as $group) {
-            if ($group->getEnfants()->contains($enfant)) {
-                $allowed = true;
-                break;
+        /** @var User $user */
+        // Vérification : le parent connecté doit être lié à cet enfant
+        $user = $this->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException("Accès refusé.");
+        }
+
+        // Cas 1 : l'utilisateur est un enfant
+        if (in_array('ROLE_ENFANT', $user->getRoles(), true)) {
+            if ($user->getEnfants()->count() === 0 || !$user->getEnfants()->contains($enfant)) {
+                throw $this->createAccessDeniedException("Accès refusé.");
             }
         }
 
-        if (!$allowed) {
-            throw $this->createAccessDeniedException("Cet enfant n'appartient pas à votre famille.");
+        // Cas 2 : l'utilisateur est un parent
+        if (in_array('ROLE_PARENT', $user->getRoles(), true)) {
+
+            $userGroups = $user->getFamilyGroups();
+            $enfantGroups = $enfant->getFamilyGroups();
+
+            $hasCommonGroup = false;
+
+            foreach ($userGroups as $group) {
+                if ($enfantGroups->contains($group)) {
+                    $hasCommonGroup = true;
+                    break;
+                }
+            }
+
+            if (!$hasCommonGroup) {
+                throw $this->createAccessDeniedException("Accès refusé.");
+            }
         }
 
-        // Données
-        $notes = $noteRepo->findBy(['enfant' => $enfant]);
-        $evaluations = $evalRepo->findBy(['enfant' => $enfant]);
-        $recompenses = $remRepo->findBy(['enfant' => $enfant]);
+        // Période en cours (ou dernière période)
+        $periode = $periodeRepo->findCurrentOrLastForEnfant($enfant);
 
-        // Synthèse par période
-        $synthese = $syntheseService->syntheseComplete($enfant);
+        // Notes de l'enfant
+        $notes = $noteRepo->findBy(['enfant' => $enfant], ['date' => 'DESC']);
+
+        // Rémunérations
+        $remunerations = $remRepo->findBy(['enfant' => $enfant], ['date' => 'DESC']);
+
+        // Objectifs
+        $objectifs = $objRepo->findBy(['enfant' => $enfant]);
+
+        // Préparation des données pour Chart.js — progression scolaire
+        $labels = [];
+        $progression = [];
+
+        foreach ($notes as $note) {
+            $labels[] = $note->getDate()->format('d/m');
+            $progression[] = round(($note->getNote() / $note->getDenominateur()) * 20, 2); // note sur 20
+        }
+
+        // Préparation des données pour Chart.js — récompenses
+        $rewardLabels = [];
+        $rewardValues = [];
+
+        foreach ($remunerations as $r) {
+            $rewardLabels[] = $r->getDate()->format('d/m');
+            $rewardValues[] = $r->getMontant();
+        }
 
         return $this->render('dashboard/enfant.html.twig', [
             'enfant' => $enfant,
+            'periode' => $periode,
             'notes' => $notes,
-            'evaluations' => $evaluations,
-            'recompenses' => $recompenses,
-            'synthese' => $synthese,
+            'remunerations' => $remunerations,
+            'objectifs' => $objectifs,
+            'labels' => $labels,
+            'progression' => $progression,
+            'rewardLabels' => $rewardLabels,
+            'rewardValues' => $rewardValues,
         ]);
     }
 }

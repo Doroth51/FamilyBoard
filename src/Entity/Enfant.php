@@ -52,6 +52,21 @@ class Enfant
     #[ORM\JoinColumn(nullable: false)]
     private ?Classe $classe = null;
 
+    #[ORM\OneToMany(mappedBy: 'enfant', targetEntity: Objectif::class)]
+    private Collection $objectifs;
+
+    #[ORM\OneToMany(mappedBy: 'enfant', targetEntity: Badge::class)]
+    private Collection $badges;
+
+    #[ORM\Column]
+    private int $xp = 0;
+
+    #[ORM\Column]
+    private int $niveau = 1;
+
+    #[ORM\ManyToOne(inversedBy: 'enfants')]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->familyGroups = new ArrayCollection();
@@ -224,6 +239,112 @@ class Enfant
     {
         $this->classe = $classe;
 
+        return $this;
+    }
+
+    /**
+     * Get the value of objectifs
+     */
+    public function getObjectifs()
+    {
+        return $this->objectifs;
+    }
+
+    /**
+     * Set the value of objectifs
+     *
+     * @return  self
+     */
+    public function setObjectifs($objectifs)
+    {
+        $this->objectifs = $objectifs;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of badges
+     */
+    public function getBadges()
+    {
+        return $this->badges;
+    }
+
+    /**
+     * Set the value of badges
+     *
+     * @return  self
+     */
+    public function setBadges($badges)
+    {
+        $this->badges = $badges;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of xp
+     */
+    public function getXp()
+    {
+        return $this->xp;
+    }
+
+    /**
+     * Set the value of xp
+     *
+     * @return  self
+     */
+    public function setXp($xp)
+    {
+        $this->xp = $xp;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of niveau
+     */
+    public function getNiveau()
+    {
+        return $this->niveau;
+    }
+
+    /**
+     * Set the value of niveau
+     *
+     * @return  self
+     */
+    public function setNiveau($niveau)
+    {
+        $this->niveau = $niveau;
+
+        return $this;
+    }
+
+    public function addXp(int $amount): void
+    {
+        $this->xp += $amount;
+
+        while ($this->xp >= $this->xpRequiredForNextLevel()) {
+            $this->xp -= $this->xpRequiredForNextLevel();
+            $this->niveau++;
+        }
+    }
+
+    public function xpRequiredForNextLevel(): int
+    {
+        return 100 + ($this->niveau * 50);
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
         return $this;
     }
 }
