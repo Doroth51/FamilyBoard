@@ -9,3 +9,15 @@
 
 controllers:
     resource: routing.controllers
+
+legal_mentions:
+    path: /mentions-legales
+    controller: App\Controller\LegalController::mentions
+
+legal_confidentialite:
+    path: /confidentialite
+    controller: App\Controller\LegalController::confidentialite
+
+legal_contact:
+    path: /contact
+    controller: App\Controller\LegalController::contact
