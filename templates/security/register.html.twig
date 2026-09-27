@@ -8,49 +8,71 @@
         <div class="row justify-content-center">
             <div class="col-md-5">
 
-                <div class="card shadow-sm border-0">
-                    <div class="card-body p-4">
+                <div class="card shadow-sm border-0 p-4">
 
-                        <h2 class="mb-4 text-center">Créer un compte</h2>
+                    <h2 class="mb-4 text-center">Créer un compte parent</h2>
 
-                        {% for message in app.flashes('error') %}
-                            <div class="alert alert-danger">{{ message }}</div>
-                        {% endfor %}
+                    {{ form_start(form) }}
 
-                        {{ form_start(form) }}
-
-                        <div class="form-floating mb-3">
-                            {{ form_widget(form.email, { attr: { class: 'form-control', placeholder: 'Email' } }) }}
-                            {{ form_label(form.email) }}
-                            {{ form_errors(form.email) }}
-                        </div>
-
-                        <div class="form-floating mb-3">
-                            {{ form_widget(form.password.first, { attr: { class: 'form-control', placeholder: 'Mot de passe' } }) }}
-                            {{ form_label(form.password.first) }}
-                            {{ form_errors(form.password.first) }}
-                        </div>
-
-                        <div class="form-floating mb-3">
-                            {{ form_widget(form.password.second, { attr: { class: 'form-control', placeholder: 'Confirmer le mot de passe' } }) }}
-                            {{ form_label(form.password.second) }}
-                            {{ form_errors(form.password.second) }}
-                        </div>
-
-                        <button class="btn btn-success w-100 py-2">Créer mon compte</button>
-
-                        {{ form_end(form) }}
-
-                        <p class="text-center mt-3">
-                            Déjà un compte ?
-                            <a href="{{ path('app_login') }}">Se connecter</a>
-                        </p>
-
+                    <div class="form-floating mb-3">
+                        {{ form_widget(form.email, { attr: { class: 'form-control', placeholder: 'Email' } }) }}
+                        {{ form_label(form.email) }}
                     </div>
+
+                    <!-- Mot de passe -->
+                    <div class="position-relative mb-3">
+                        <div class="form-floating">
+                            {{ form_widget(form.password.first, { attr: { class: 'form-control password-field', placeholder: 'Mot de passe' } }) }}
+                            {{ form_label(form.password.first) }}
+                        </div>
+
+                        <span
+                            class="toggle-password position-absolute top-50 end-0 translate-middle-y me-3"
+                            style="cursor:pointer; font-size:1.3rem;"
+                        >
+                            🙈
+                        </span>
+                    </div>
+
+                    <!-- Confirmation -->
+                    <div class="position-relative mb-3">
+                        <div class="form-floating">
+                            {{ form_widget(form.password.second, { attr: { class: 'form-control password-field', placeholder: 'Confirmer le mot de passe' } }) }}
+                            {{ form_label(form.password.second) }}
+                        </div>
+
+                        <span
+                            class="toggle-password position-absolute top-50 end-0 translate-middle-y me-3"
+                            style="cursor:pointer; font-size:1.3rem;"
+                        >
+                            🙈
+                        </span>
+                    </div>
+
+                    <button class="btn btn-success w-100 py-2">Créer mon compte</button>
+
+                    {{ form_end(form) }}
+
                 </div>
 
             </div>
         </div>
 
     </div>
+
+    <script>
+        document.querySelectorAll(".toggle-password").forEach((icon) => {
+            icon.addEventListener("click", () => {
+                const input =
+                    icon.previousElementSibling.querySelector(".password-field");
+                if (input.type === "password") {
+                    input.type = "text";
+                    icon.textContent = "🐵";
+                } else {
+                    input.type = "password";
+                    icon.textContent = "🙈";
+                }
+            });
+        });
+    </script>
 {% endblock %}
