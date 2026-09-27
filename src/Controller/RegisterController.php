@@ -32,7 +32,7 @@ class RegisterController extends AbstractController
             $user->setPrenom($form->get('prenom')->getData());
             $user->setEmail($form->get('email')->getData());
             $user->setPassword(
-                $hasher->hashPassword($user, $user->getPassword())
+                $hasher->hashPassword($user, $form->get('password')->getData())
             );
 
             $user->setRoles(['ROLE_PARENT']);

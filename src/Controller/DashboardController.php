@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Repository\EnfantRepository;
 use App\Repository\PeriodeRepository;
 use App\Repository\NoteRepository;
 use App\Repository\EvaluationRepository;
+use App\Repository\FamilyGroupRepository;
+use App\Repository\InvitationRepository;
 use App\Repository\RemunerationRepository;
 use App\Service\MatiereStatsService;
 use App\Service\PeriodeSyntheseService;
@@ -25,11 +28,25 @@ class DashboardController extends AbstractController
         EnfantRepository $enfantRepo,
         PeriodeRepository $periodeRepo,
         NoteRepository $noteRepo,
-        PeriodeSyntheseService $periodeSyntheseService
+        PeriodeSyntheseService $periodeSyntheseService,
+        InvitationRepository $invitationRepository,
+        FamilyGroupRepository $familyGroupRepository
     ): Response {
+        /** @var User $user */
+        $user = $this->getUser();
         $enfants = $enfantRepo->findAll();
-
+        $invitations = $invitationRepository->findAll();
+        $periodes = $periodeRepo->findAll();
+        $groupEntity = $user->getFamilyGroups()->first();
+        $group = [
+            'id' => $groupEntity->getId(),
+            'name' => $groupEntity->getName(),
+            'enfants' => $groupEntity->getEnfants(),
+            'users' => $groupEntity->getUsers(),
+            'invitations' => $groupEntity->getInvitations()
+        ];
         $syntheses = [];
+
         foreach ($enfants as $enfant) {
             $syntheses[$enfant->getId()] = $periodeSyntheseService->syntheseComplete($enfant);
         }
@@ -38,7 +55,9 @@ class DashboardController extends AbstractController
             'enfants' => $enfants,
             'notes' => $noteRepo,
             'syntheses' => $syntheses,
-            'periodes' => $periodeRepo->findAll(),
+            'periodes' => $periodes,
+            'invitations' => $invitations,
+            'group' => $group
         ]);
     }
 
