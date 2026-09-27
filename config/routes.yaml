@@ -21,3 +21,15 @@ legal_confidentialite:
 legal_contact:
     path: /contact
     controller: App\Controller\LegalController::contact
+
+reset_password_request:
+    path: /reset-password
+    controller: App\Controller\ResetPasswordController::request
+
+reset_password_email:
+    path: /reset-password/email
+    controller: App\Controller\ResetPasswordController::emailSent
+
+reset_password_new:
+    path: /reset-password/{token}
+    controller: App\Controller\ResetPasswordController::reset

@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\FamilyGroup;
-use App\Entity\Invitation;
 use App\Form\RegisterType;
 use App\Repository\InvitationRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,7 +27,10 @@ class RegisterController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+            $user->setFamilyName($form->get('familyName')->getData());
+            $user->setNom($form->get('nom')->getData());
+            $user->setPrenom($form->get('prenom')->getData());
+            $user->setEmail($form->get('email')->getData());
             $user->setPassword(
                 $hasher->hashPassword($user, $user->getPassword())
             );
