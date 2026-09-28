@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un groupe familial{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+
+        <h2 class="mb-4">Créer un groupe familial</h2>
+
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn btn-success mt-3">Créer</button>
+        {{ form_end(form) }}
+
+        <a href="{{ path('family_group_index') }}" class="btn btn-secondary mt-3">Retour</a>
+
+    </div>
+{% endblock %}

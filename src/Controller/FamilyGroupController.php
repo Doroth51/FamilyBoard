@@ -20,7 +20,7 @@ class FamilyGroupController extends AbstractController
     public function index(FamilyGroupRepository $repo): Response
     {
         return $this->render('family_group/index.html.twig', [
-            'groups' => $repo->findAll(),
+            'family_groups' => $repo->findAll(),
         ]);
     }
 

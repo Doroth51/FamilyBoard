@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Groupes familiaux — FamilyBoard{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+
+        <h2 class="mb-4">Groupes familiaux</h2>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom du groupe</th>
+                    <th>Parents</th>
+                    <th>Enfants</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for group in family_groups %}
+                    <tr>
+                        <td>{{ group.id }}</td>
+                        <td>{{ group.name }}</td>
+                        <td>
+                            {% for user in group.users %}
+                                {{ user.prenom }} {{ user.nom }}<br>
+                            {% else %}
+                                <span class="text-muted">Aucun parent</span>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for enfant in group.enfants %}
+                                {{ enfant.name }}<br>
+                            {% else %}
+                                <span class="text-muted">Aucun enfant</span>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <a href="{{ path('family_group_show', {id: group.id}) }}" class="btn btn-sm btn-primary">Voir</a>
+                            <a href="{{ path('family_group_edit', {id: group.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('family_group_new') }}" class="btn btn-success mt-3">Créer un groupe familial</a>
+
+    </div>
+{% endblock %}
