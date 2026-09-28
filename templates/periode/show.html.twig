@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Période{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+
+        <h2 class="mb-4">Période {{ periode.type }}</h2>
+
+        <ul class="list-group mb-4">
+            <li class="list-group-item"><strong>Type :</strong> {{ periode.type }}</li>
+            <li class="list-group-item"><strong>Numero :</strong> {{ periode.numero }}</li>
+            <li class="list-group-item"><strong>Année :</strong> {{ periode.annee }}</li>
+        </ul>
+
+        <a href="{{ path('periode_edit', {id: periode.id}) }}" class="btn btn-warning">Modifier</a>
+        <a href="{{ path('periode_index') }}" class="btn btn-secondary">Retour</a>
+
+    </div>
+{% endblock %}

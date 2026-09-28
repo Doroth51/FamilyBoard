@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Périodes — FamilyBoard{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+
+        <h2 class="mb-4">Liste des périodes</h2>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>Numéro</th>
+                    <th>Année</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for periode in periodes %}
+                    <tr>
+                        <td>{{ periode.id }}</td>
+                        <td>{{ periode.type }}</td>
+                        <td>{{ periode.numero }}</td>
+                        <td>{{ periode.annee }}</td>
+                        <td>
+                            <a href="{{ path('periode_show', {id: periode.id}) }}" class="btn btn-sm btn-primary">Voir</a>
+                            <a href="{{ path('periode_edit', {id: periode.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('periode_new') }}" class="btn btn-success">Créer une période</a>
+
+    </div>
+{% endblock %}
