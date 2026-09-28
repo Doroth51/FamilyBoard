@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Matières — FamilyBoard{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+
+        <h2 class="mb-4">Liste des matières</h2>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for matiere in matieres %}
+                    <tr>
+                        <td>{{ matiere.id }}</td>
+                        <td>{{ matiere.name }}</td>
+                        <td>
+                            <a href="{{ path('matiere_show', {id: matiere.id}) }}" class="btn btn-sm btn-primary">Voir</a>
+                            <a href="{{ path('matiere_edit', {id: matiere.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('matiere_new') }}" class="btn btn-success">Créer une matière</a>
+
+    </div>
+{% endblock %}

@@ -55,6 +55,15 @@
             </div>
 
             <div class="col-12 col-md-4">
+                <a href="{{ path('matiere_index') }}" class="text-decoration-none">
+                    <div class="card shadow-sm p-3 text-center">
+                        <h5>Matières</h5>
+                        <p class="display-6">{{ matieres|length }}</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-12 col-md-4">
                 <a href="{{ path('admin_invitations') }}" class="text-decoration-none">
                     <div class="card shadow-sm p-3 text-center">
                         <h5>Invitations</h5>

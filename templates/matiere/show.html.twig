@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Matière{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+
+        <h2 class="mb-4">Matière {{ matiere.name }}</h2>
+
+        <ul class="list-group mb-4">
+            <li class="list-group-item"><strong>Nom :</strong> {{ matiere.name }}</li>
+        </ul>
+
+        <a href="{{ path('matiere_edit', {id: matiere.id}) }}" class="btn btn-warning">Modifier</a>
+        <a href="{{ path('matiere_index') }}" class="btn btn-secondary">Retour</a>
+
+    </div>
+{% endblock %}
