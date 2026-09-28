@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Classes — FamilyBoard{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+
+        <h2 class="mb-4">Liste des classes</h2>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Niveau</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for classe in classes %}
+                    <tr>
+                        <td>{{ classe.id }}</td>
+                        <td>{{ classe.name }}</td>
+                        <td>{{ classe.niveau.name }}</td>
+                        <td>
+                            <a href="{{ path('classe_show', {id: classe.id}) }}" class="btn btn-sm btn-primary">Voir</a>
+                            <a href="{{ path('classe_edit', {id: classe.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('classe_new') }}" class="btn btn-success">Créer une classe</a>
+
+    </div>
+{% endblock %}

@@ -11,10 +11,12 @@
         <div class="row g-3 mb-4">
 
             <div class="col-12 col-md-4">
-                <div class="card shadow-sm p-3 text-center">
-                    <h5>Enfants</h5>
-                    <p class="display-6">{{ enfants|length }}</p>
-                </div>
+                <a href="{{ path('enfant_index') }}" class="text-decoration-none">
+                    <div class="card shadow-sm p-3 text-center">
+                        <h5>Enfants</h5>
+                        <p class="display-6">{{ enfants|length }}</p>
+                    </div>
+                </a>
             </div>
 
             <div class="col-12 col-md-4">

@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Classe{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+
+        <h2 class="mb-4">Classe {{ classe.name }}</h2>
+
+        <ul class="list-group mb-4">
+            <li class="list-group-item"><strong>Nom :</strong> {{ classe.name }}</li>
+        </ul>
+
+        <a href="{{ path('classe_edit', {id: classe.id}) }}" class="btn btn-warning">Modifier</a>
+        <a href="{{ path('classe_index') }}" class="btn btn-secondary">Retour</a>
+
+    </div>
+{% endblock %}
