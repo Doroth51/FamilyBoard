@@ -8,7 +8,7 @@
         <h1 class="mb-4">Tableau de bord familial</h1>
 
         <!-- Résumé global -->
-        <div class="row g-3 mb-4">
+        {# <div class="row g-3 mb-4">
 
             <div class="col-12 col-md-4">
                 <a href="{{ path('enfant_index') }}" class="text-decoration-none">
@@ -19,24 +19,24 @@
                 </a>
             </div>
 
-            <div class="col-12 col-md-4">
+            {# <div class="col-12 col-md-4">
                 <div class="card shadow-sm p-3 text-center">
                     <h5>Périodes</h5>
                     <p class="display-6">{{ periodes|length }}</p>
                 </div>
-            </div>
+            </div> #}
 
-            <div class="col-12 col-md-4">
+        {# <div class="col-12 col-md-4">
                 <div class="card shadow-sm p-3 text-center">
                     <h5>Invitations</h5>
                     <p class="display-6">{{ invitations|length }}</p>
                 </div>
-            </div>
+            </div> #}
 
-        </div>
-
+        {# </div> #}
+    
         <!-- Liste des enfants -->
-        <h3 class="mt-4">Vos enfants</h3>
+        <h3 class="mt-4">Mes enfants</h3>
         <div class="row g-3">
 
             {% for enfant in enfants %}

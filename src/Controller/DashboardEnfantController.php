@@ -57,12 +57,40 @@ class DashboardEnfantController extends AbstractController
             }
         }
 
+        $matieres = [];
+        // Retour attendu 
+        // $matieres = [
+        //      [
+        //          'id' => 1,
+        //          'nom' => 'Mathématiques',
+        //          'moyenne' => 14.25,
+        //          'notes' => [
+        //              ['date' => '2026-09-01', 'note' => 15, 'coefficient' => 2],
+        //              ['date' => '2026-09-15', 'note' => 13.5, 'coefficient' => 1],
+        //          ]
+        //      ],
+        //      [
+        //          'id' => 2,
+        //          'nom' => 'Français',
+        //          'moyenne' => 12.75,
+        //          'notes' => [
+        //              ['date' => '2026-09-03', 'note' => 11],
+        //              ['date' => '2026-09-20', 'note' => 14.5],
+        //          ]
+        //      ]
+        // ];
+
         // Période en cours (ou dernière période)
         $periode = $periodeRepo->findCurrentOrLastForEnfant($enfant);
 
         // Notes de l'enfant
         $notes = $noteRepo->findBy(['enfant' => $enfant], ['date' => 'DESC']);
-
+        $notesByMatieres = [];
+        // if (!empty($notes)) {
+        //     foreach ($notes as $note) {
+        //         $notesByMatieres[$note['matiere']] = [];
+        //     }
+        // }
         // Rémunérations
         $remunerations = $remRepo->findBy(['enfant' => $enfant], ['date' => 'DESC']);
 
@@ -88,6 +116,7 @@ class DashboardEnfantController extends AbstractController
         }
 
         return $this->render('dashboard/enfant.html.twig', [
+            'matieres' => $matieres,
             'enfant' => $enfant,
             'periode' => $periode,
             'notes' => $notes,

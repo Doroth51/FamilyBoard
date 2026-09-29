@@ -7,6 +7,7 @@ use App\Entity\Note;
 use App\Form\NoteType;
 use App\Repository\NoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,9 +24,12 @@ class NoteController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'note_new', methods: ['GET', 'POST'])]
-    public function new(Enfant $enfant, Request $request, EntityManagerInterface $em): Response
-    {
+    #[Route('/new/{enfantId<\d+>}', name: 'note_new', methods: ['GET', 'POST'])]
+    public function new(
+        #[MapEntity(id: 'enfantId')] Enfant $enfant,
+        Request $request,
+        EntityManagerInterface $em
+    ): Response {
         $note = new Note();
         $form = $this->createForm(NoteType::class, $note, [
             'enfant' => $enfant
