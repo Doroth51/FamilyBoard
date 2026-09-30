@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Enfant;
 use App\Entity\Evaluation;
 use App\Form\EvaluationType;
 use App\Repository\EvaluationRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,11 +24,16 @@ class EvaluationController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'evaluation_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $em): Response
-    {
+    #[Route('/new/{enfantId<\d+>}', name: 'evaluation_new', methods: ['GET', 'POST'])]
+    public function new(
+        #[MapEntity(id: 'enfantId')] Enfant $enfant,
+        Request $request,
+        EntityManagerInterface $em
+    ): Response {
         $evaluation = new Evaluation();
-        $form = $this->createForm(EvaluationType::class, $evaluation);
+        $form = $this->createForm(EvaluationType::class, $evaluation, [
+            'enfant' => $enfant
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

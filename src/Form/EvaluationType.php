@@ -28,10 +28,11 @@ class EvaluationType extends AbstractType
             ->add('niveau', ChoiceType::class, [
                 'label' => 'Niveau de maîtrise',
                 'choices' => [
-                    'Très Bonne Maîtrise' => 'TBM',
+                    'Non évalué' => 'NE',
+                    'Maîtrise insuffisante' => 'MI',
+                    'Maitrise fragile' => 'MF',
                     'Maîtrise Suffisante' => 'MS',
-                    'Maîtrise Insuffisante' => 'MI',
-                    'Compétence Non Acquise' => 'CNA',
+                    'Très Bonne Maîtrise' => 'TBM'
                 ]
             ])
             ->add('libelle', TextType::class, [
