@@ -34,6 +34,7 @@ class NoteController extends AbstractController
         $form = $this->createForm(NoteType::class, $note, [
             'enfant' => $enfant
         ]);
+        dd($form);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

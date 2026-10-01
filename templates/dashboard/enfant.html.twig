@@ -40,13 +40,13 @@
                                 </td>
                                 <td>{{ matiere.moyenne|number_format(2, ',', ' ') }}</td>
                             </tr>
- 
                             <tr id="notes-{{ matiere.id }}" class="notes-detail" style="display:none;">
                                 <td colspan="2">
                                     <table class="table table-sm mb-0">
                                         <thead>
                                             <tr>
                                                 <th>Date</th>
+                                                <th>Libelle</th>
                                                 <th>Note</th>
                                                 <th>Coefficient</th>
                                             </tr>
@@ -55,6 +55,7 @@
                                             {% for note in matiere.notes %}
                                                 <tr>
                                                     <td>{{ note.date|date('d/m/Y') }}</td>
+                                                    <td>{{ note.libelle }}</td>
                                                     <td>{{ note.note }}</td>
                                                     <td>{{ note.coefficient|default(1) }}</td>
                                                 </tr>
@@ -76,59 +77,26 @@
             <a href="{{ path('note_new', {enfantId: enfant.id}) }}" class="btn btn-success">Ajouter une note</a>
 
         {% else %}
-            <!-- EVALUATIONS -->
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Matière</th>
-                        <th>Evaluations</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if matieres is not empty %}
-                        {% for matiere in matieres %}
-                            {# <tr
-                                class="matiere-row"
-                                data-target="notes-{{ matiere.id }}"
-                                style="cursor:pointer;"
-                            >
-                                <td>
-                                    <i class="fas fa-chevron-right me-2"></i>
-                                    {{ matiere.nom }}
-                                </td>
-                                <td>{{ matiere.moyenne|number_format(2, ',', ' ') }}</td>
-                            </tr>
- 
-                            <tr id="notes-{{ matiere.id }}" class="notes-detail" style="display:none;">
-                                <td colspan="2">
-                                    <table class="table table-sm mb-0">
-                                        <thead>
-                                            <tr>
-                                                <th>Date</th>
-                                                <th>Note</th>
-                                                <th>Coefficient</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for note in matiere.notes %}
-                                                <tr>
-                                                    <td>{{ note.date|date('d/m/Y') }}</td>
-                                                    <td>{{ note.note }}</td>
-                                                    <td>{{ note.coefficient|default(1) }}</td>
-                                                </tr>
-                                            {% else %}
-                                                <tr>
-                                                    <td colspan="3">Aucune note</td>
-                                                </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr> #}
+            {% for nomMatiere, evaluations in evaluationsParMatiere %}
+                <tr
+                    class="matiere-row"
+                    data-target="matiere-{{ loop.index }}"
+                >
+                    <td>{{ nomMatiere }}</td>
+                    <td>{{ evaluations|length }}</td>
+                </tr>
+                <tr id="matiere-{{ loop.index }}" style="display:none">
+                    <td colspan="2">
+                        {% for evaluation in evaluations %}
+                            <p>
+                                {{ evaluation.date|date('d/m/Y') }}
+                                - {{ evaluation.niveau }}
+                                - {{ evaluation.libelle }}
+                            </p>
                         {% endfor %}
-                    {% endif %}
-                </tbody>
-            </table>
+                    </td>
+                </tr>
+            {% endfor %}
         
             <!-- bouton ajouter note -->
             <a href="{{ path('evaluation_new', {enfantId: enfant.id}) }}" class="btn btn-success">Ajouter une évaluation</a>
@@ -234,6 +202,16 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
+        document.querySelectorAll(".matiere-row").forEach((row) => {
+            row.addEventListener("click", () => {
+                const detail = document.getElementById(row.dataset.target);
+                detail.style.display =
+                    detail.style.display === "table-row" ? "none" : "table-row";
+            });
+        });
+    </script>
+
+    {# <script>
     new Chart(document.getElementById('progressChart'), {
         type: 'line',
         data: {
@@ -258,5 +236,7 @@
             }]
         }
     });
-</script>
+
+    
+</script> #}
 {% endblock %}

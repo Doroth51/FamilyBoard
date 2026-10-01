@@ -58,27 +58,76 @@ class DashboardEnfantController extends AbstractController
         }
 
         $matieres = [];
-        // Retour attendu 
-        // $matieres = [
-        //      [
-        //          'id' => 1,
-        //          'nom' => 'Mathématiques',
-        //          'moyenne' => 14.25,
-        //          'notes' => [
-        //              ['date' => '2026-09-01', 'note' => 15, 'coefficient' => 2],
-        //              ['date' => '2026-09-15', 'note' => 13.5, 'coefficient' => 1],
-        //          ]
-        //      ],
-        //      [
-        //          'id' => 2,
-        //          'nom' => 'Français',
-        //          'moyenne' => 12.75,
-        //          'notes' => [
-        //              ['date' => '2026-09-03', 'note' => 11],
-        //              ['date' => '2026-09-20', 'note' => 14.5],
-        //          ]
-        //      ]
-        // ];
+
+        if ($enfant->getEvaluationMode() === "note") {
+            $matieres = [];
+
+            foreach ($enfant->getNotes() as $note) {
+                $matiere = $note->getMatiere();
+                if (!$matiere) {
+                    continue;
+                }
+
+                $matiereId = $matiere->getId();
+                if (!isset($matieres[$matiereId])) {
+                    $matieres[$matiereId] = [
+                        'id' => $matiereId,
+                        'nom' => $matiere->getName(),
+                        'notes' => [],
+                        'totalPoints' => 0,
+                        'totalCoefficients' => 0,
+                    ];
+                }
+
+                $matieres[$matiereId]['notes'][] = $note;
+                $matieres[$matiereId]['libelle'] = $note->getLibelle();
+                $matieres[$matiereId]['totalPoints'] +=
+                    ($note->getNote() / $note->getDenominateur()) * 20 * $note->getCoefficient();
+                $matieres[$matiereId]['totalCoefficients'] +=
+                    $note->getCoefficient();
+            }
+            foreach ($matieres as &$matiere) {
+                $matiere['moyenne'] =
+                    $matiere['totalCoefficients'] > 0
+                    ? $matiere['totalPoints'] / $matiere['totalCoefficients']
+                    : 0;
+                unset(
+                    $matiere['totalPoints'],
+                    $matiere['totalCoefficients']
+                );
+            }
+            // Retour attendu 
+            // $matieres = [
+            //      [
+            //          'id' => 1,
+            //          'nom' => 'Mathématiques',
+            //          'moyenne' => 14.25,
+            //          'notes' => [
+            //              ['date' => '2026-09-01', 'note' => 15, 'coefficient' => 2],
+            //              ['date' => '2026-09-15', 'note' => 13.5, 'coefficient' => 1],
+            //          ]
+            //      ],
+            //      [
+            //          'id' => 2,
+            //          'nom' => 'Français',
+            //          'moyenne' => 12.75,
+            //          'notes' => [
+            //              ['date' => '2026-09-03', 'note' => 11],
+            //              ['date' => '2026-09-20', 'note' => 14.5],
+            //          ]
+            //      ]
+            // ];
+        } else { //evaluation
+            $evaluations = $enfant->getEvaluations()->toArray();
+            $evaluationsParMatiere = [];
+            foreach ($evaluations as $evaluation) {
+                $matiere = $evaluation->getMatiere()->getName();
+                if (!isset($evaluationsParMatiere[$matiere])) {
+                    $evaluationsParMatiere[$matiere] = [];
+                }
+                $evaluationsParMatiere[$matiere][] = $evaluation;
+            }
+        }
 
         // Période en cours (ou dernière période)
         $periode = $periodeRepo->findCurrentOrLastForEnfant($enfant);
@@ -92,40 +141,33 @@ class DashboardEnfantController extends AbstractController
         //     }
         // }
         // Rémunérations
-        $remunerations = $remRepo->findBy(['enfant' => $enfant], ['date' => 'DESC']);
+        // $remunerations = $remRepo->findBy(['enfant' => $enfant], ['date' => 'DESC']);
 
-        // Objectifs
-        $objectifs = $objRepo->findBy(['enfant' => $enfant]);
+        // // Objectifs
+        // $objectifs = $objRepo->findBy(['enfant' => $enfant]);
 
-        // Préparation des données pour Chart.js — progression scolaire
-        $labels = [];
-        $progression = [];
+        // // Préparation des données pour Chart.js — progression scolaire
+        // $labels = [];
+        // $progression = [];
 
-        foreach ($notes as $note) {
-            $labels[] = $note->getDate()->format('d/m');
-            $progression[] = round(($note->getNote() / $note->getDenominateur()) * 20, 2); // note sur 20
-        }
+        // foreach ($notes as $note) {
+        //     $labels[] = $note->getDate()->format('d/m');
+        //     $progression[] = round(($note->getNote() / $note->getDenominateur()) * 20, 2); // note sur 20
+        // }
 
-        // Préparation des données pour Chart.js — récompenses
-        $rewardLabels = [];
-        $rewardValues = [];
+        // // Préparation des données pour Chart.js — récompenses
+        // $rewardLabels = [];
+        // $rewardValues = [];
 
-        foreach ($remunerations as $r) {
-            $rewardLabels[] = $r->getDate()->format('d/m');
-            $rewardValues[] = $r->getMontant();
-        }
+        // foreach ($remunerations as $r) {
+        //     $rewardLabels[] = $r->getDate()->format('d/m');
+        //     $rewardValues[] = $r->getMontant();
+        // }
 
         return $this->render('dashboard/enfant.html.twig', [
             'matieres' => $matieres,
-            'enfant' => $enfant,
-            'periode' => $periode,
-            'notes' => $notes,
-            'remunerations' => $remunerations,
-            'objectifs' => $objectifs,
-            'labels' => $labels,
-            'progression' => $progression,
-            'rewardLabels' => $rewardLabels,
-            'rewardValues' => $rewardValues,
+            'evaluationsParMatiere' => $evaluationsParMatiere ?? [],
+            'enfant' => $enfant
         ]);
     }
 }

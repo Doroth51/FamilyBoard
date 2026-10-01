@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Entity\Enfant;
 use App\Entity\Periode;
-use App\Entity\Note;
 use App\Entity\Evaluation;
 
 class ProgressionService
@@ -54,6 +53,9 @@ class ProgressionService
                 $score = 2;
                 break;
             case 'CNA':
+                $score = 1;
+                break;
+            case 'NE':
                 $score = 0;
                 break;
             default:
