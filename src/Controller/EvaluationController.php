@@ -31,6 +31,8 @@ class EvaluationController extends AbstractController
         EntityManagerInterface $em
     ): Response {
         $evaluation = new Evaluation();
+        $evaluation->setEnfant($enfant);
+
         $form = $this->createForm(EvaluationType::class, $evaluation, [
             'enfant' => $enfant
         ]);

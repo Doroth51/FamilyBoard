@@ -31,10 +31,12 @@ class NoteController extends AbstractController
         EntityManagerInterface $em
     ): Response {
         $note = new Note();
+        $note->setEnfant($enfant);
+
         $form = $this->createForm(NoteType::class, $note, [
             'enfant' => $enfant
         ]);
-        dd($form);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -49,6 +49,7 @@
                                                 <th>Libelle</th>
                                                 <th>Note</th>
                                                 <th>Coefficient</th>
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -56,8 +57,12 @@
                                                 <tr>
                                                     <td>{{ note.date|date('d/m/Y') }}</td>
                                                     <td>{{ note.libelle }}</td>
-                                                    <td>{{ note.note }}</td>
+                                                    <td>{{ note.note }} / {{ note.denominateur }}</td>
                                                     <td>{{ note.coefficient|default(1) }}</td>
+                                                    <td>
+                                                        <a href="{{ path('note_show', {id: note.id}) }}">Voir</a>
+                                                        <a href="{{ path('note_edit', {id: note.id}) }}">Modifier</a>
+                                                    </td>
                                                 </tr>
                                             {% else %}
                                                 <tr>
@@ -77,26 +82,61 @@
             <a href="{{ path('note_new', {enfantId: enfant.id}) }}" class="btn btn-success">Ajouter une note</a>
 
         {% else %}
-            {% for nomMatiere, evaluations in evaluationsParMatiere %}
-                <tr
-                    class="matiere-row"
-                    data-target="matiere-{{ loop.index }}"
-                >
-                    <td>{{ nomMatiere }}</td>
-                    <td>{{ evaluations|length }}</td>
-                </tr>
-                <tr id="matiere-{{ loop.index }}" style="display:none">
-                    <td colspan="2">
-                        {% for evaluation in evaluations %}
-                            <p>
-                                {{ evaluation.date|date('d/m/Y') }}
-                                - {{ evaluation.niveau }}
-                                - {{ evaluation.libelle }}
-                            </p>
-                        {% endfor %}
-                    </td>
-                </tr>
-            {% endfor %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Matière</th>
+                        <th>Nombre d'évaluations</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for nomMatiere, evaluations in evaluationsParMatiere %}
+                        <tr
+                            class="matiere-row"
+                            data-target="matiere-{{ loop.index }}"
+                            style="cursor:pointer;"
+                        >
+                            <td><i class="fas fa-chevron-right me-2"></i>{{ nomMatiere }}</td>
+                            <td>{{ evaluations|length }}</td>
+                        </tr>
+                        
+                        
+                        <tr id="matiere-{{ loop.index }}" style="display:none">
+                            <td colspan="2">
+                                <table class="table table-sm mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Libelle</th>
+                                            <th>Appréciation</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for evaluation in evaluations %}
+                                            <tr>
+                                                <td>{{ evaluation.date|date('d/m/Y') }}</td>
+                                                <td>{{ evaluation.libelle }}</td>
+                                                <td>{{ evaluation.niveau }}</td>
+                                                <td>
+                                                    <a href="{{ path('evaluation_show', {id: evaluation.id}) }}">Voir</a>
+                                                    <a href="{{ path('evaluation_edit', {id: evaluation.id}) }}">Modifier</a>
+                                                </td>
+                                            </tr>
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="3">Aucune évaluation</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        
+                       
+                    {% endfor %}
+                </tbody>
+            </table>
         
             <!-- bouton ajouter note -->
             <a href="{{ path('evaluation_new', {enfantId: enfant.id}) }}" class="btn btn-success">Ajouter une évaluation</a>
