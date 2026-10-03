@@ -2,24 +2,29 @@
 
 namespace App\Service;
 
-use App\Entity\Note;
+use App\Entity\Enfant;
 
 class CalculService
 {
-    public function moyenne(array $notes): ?float
+    public function calculMoyenneGenerale(Enfant $enfant): ?float
     {
+        $notes = $enfant->getNotes();
         if (empty($notes)) {
             return null;
         }
 
-        $total = 0;
-        $coef = 0;
+        $totalNotes = 0;
+        $totalBaremes = 0;
+        $coefTotal = 0;
+        $moyenne = 0;
 
         foreach ($notes as $note) {
-            $total += ($note->getNote() / $note->getDenominateur()) * $note->getCoefficient();
-            $coef += $note->getCoefficient();
+            $coefTotal += $note->getCoefficient();
+            $totalNotes += $note->getNote() * $note->getCoefficient();
+            $totalBaremes += $note->getDenominateur() * $note->getCoefficient();
+            $moyenne =  ($totalNotes / $totalBaremes) * 20;
         }
 
-        return $coef > 0 ? round($total / $coef, 2) : null;
+        return $coefTotal > 0 ? round($moyenne, 2) : null;
     }
 }

@@ -57,3 +57,8 @@ body {
 .input-success {
     border: 2px solid #198754 !important;
 }
+
+#demoGauge2 {
+    width: 20em;
+    height: 20em;
+}

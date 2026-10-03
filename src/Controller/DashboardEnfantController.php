@@ -8,6 +8,7 @@ use App\Repository\NoteRepository;
 use App\Repository\PeriodeRepository;
 use App\Repository\RemunerationRepository;
 use App\Repository\ObjectifRepository;
+use App\Service\CalculService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -20,7 +21,8 @@ class DashboardEnfantController extends AbstractController
         NoteRepository $noteRepo,
         PeriodeRepository $periodeRepo,
         RemunerationRepository $remRepo,
-        ObjectifRepository $objRepo
+        ObjectifRepository $objRepo,
+        CalculService $calculService
     ): Response {
 
         /** @var User $user */
@@ -58,9 +60,11 @@ class DashboardEnfantController extends AbstractController
         }
 
         $matieres = [];
+        $moyenneGenerale = 0;
 
         if ($enfant->getEvaluationMode() === "note") {
             $matieres = [];
+            $moyenneGenerale = $calculService->calculMoyenneGenerale($enfant);
 
             foreach ($enfant->getNotes() as $note) {
                 $matiere = $note->getMatiere();
@@ -166,6 +170,7 @@ class DashboardEnfantController extends AbstractController
 
         return $this->render('dashboard/enfant.html.twig', [
             'matieres' => $matieres,
+            'moyenne' => $moyenneGenerale,
             'evaluationsParMatiere' => $evaluationsParMatiere ?? [],
             'enfant' => $enfant
         ]);

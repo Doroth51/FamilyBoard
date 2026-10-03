@@ -5,16 +5,24 @@
 {% block body %}
     <div class="container py-4">
 
-        <!-- HEADER -->
-        <div class="d-flex align-items-center gap-3 mb-4">
-            {# <img src="/images/avatar-default.png" class="rounded-circle" width="80"> #}
-            <div>
-                <h2 class="mb-1">{{ enfant.name }}</h2>
-                <p class="text-muted mb-0">{{ enfant.classe.name }}</p>
-                {# <p class="text-muted mb-0">Période : {{ periode.type }} {{ periode.numero }}</p> #}
+        <div>
+            {% if enfant.evaluationMode === 'note' %}
+                <div id="demoGauge">{{ moyenne }}</div>
+            {% else %}
+                <div id="demoGauge"></div>
+            {% endif %}
+            <!-- HEADER -->
+            <div class="d-flex align-items-center gap-3 mb-4">
+                {# <img src="/images/avatar-default.png" class="rounded-circle" width="80"> #}
+                <div>
+                    <h2 class="mb-1">{{ enfant.name }}</h2>
+                    <p class="text-muted mb-0">{{ enfant.classe.name }}</p>
+                    {# <p class="text-muted mb-0">Période : {{ periode.type }} {{ periode.numero }}</p> #}
+                </div>
             </div>
-        </div>
 
+        </div>
+        
 
         {% if enfant.evaluationMode === 'note' %}
             <!-- NOTES -->
@@ -247,6 +255,42 @@
                 const detail = document.getElementById(row.dataset.target);
                 detail.style.display =
                     detail.style.display === "table-row" ? "none" : "table-row";
+            });
+        });
+
+        $(document).ready(function () {
+            $("#demoGauge").simpleGauge({
+                container: {
+                    style: "background-color: #eee; border-radius: 1000px; border: 4px solid #bbb;",
+                    size: 87,
+                },
+                title: {
+                    text: "Moyenne",
+                    style: "color: gray; font-size: 40px; padding: 0px;",
+                },
+                digital: {
+                    text: "{value.3}",
+                    style: "color: auto; font-size: 30px;",
+                },
+                analog: {
+                    numTicks: 6,
+                    minAngle: 180,
+                    maxAngle: 360,
+                    lineWidth: 10,
+                    arrowWidth: 20,
+                    arrowColor: "#ccc",
+                    inset: false,
+                },
+                barColors: [
+                    [0, "#da0202"],
+                    [10, "#fd7f02"],
+                    [14, "rgb(38, 204, 1)"],
+                    [17, "rgb(255, 0, 208)"],
+                ],
+
+                min: 0,
+                max: 20,
+                value: 14.11,
             });
         });
     </script>
