@@ -17,8 +17,9 @@
             </div>
 
             {% if enfant.evaluationMode === 'note' %}
-                <div id="demoGauge" style="width:150px;height:150px;"></div>
-                
+                {# <div id="demoGauge" style="width:150px;height:150px;"></div> #}
+                <div id="boxMultibar" style="width: -webkit-fill-available; padding: 0em 5em 0em 5em;"></div>
+
                 {# {% else %}
                 <div id="demoGauge"></div> #}
             {% endif %}
@@ -260,43 +261,49 @@
         });
     </script>
 
-    <script src="{{ asset('js/jquery.simplegauge.js') }}" type="text/javascript" charset="utf-8"></script>
+    <script src="{{ asset('js/multibar.js') }}" type="text/javascript" charset="utf-8"></script>
     <script>
-        $(document).ready(function () {
-            $("#demoGauge").simpleGauge({
-                container: {
-                    style: "background-color: #eee; border-radius: 1000px; border: 4px solid #bbb;",
-                    size: 87,
+        var bar = $("#boxMultibar").multibar({
+            initValue: [{{ moyenne }}],
+            posMarker: "outside",
+            iconMarker: "arrow-down",
+            min: 0,
+            max: 20,
+            multiBarValue: [
+                {
+                    visibility: "visible",
+                    val: 7,
+                    bgColor: "red",
                 },
-                digital: {
-                    text: {{ moyenne|default(0) }},
-                    style: "color: auto; font-size: 10px; top: 25%",
+                {
+                    visibility: "visible",
+                    val: 10,
+                    bgColor: "orange",
                 },
-                analog: {
-                    numTicks: 6,
-                    minAngle: 270,
-                    maxAngle: 450,
-                    lineWidth: 10,
-                    arrowWidth: 20,
-                    arrowColor: "#ccc",
-                    inset: false,
+                {
+                    visibility: "visible",
+                    val: 13,
+                    bgColor: "yellow",
                 },
-                bars: {
-                    colors: [
-                        [0, "#da0202"],
-                        [7, "#fd7f02"],
-                        [11, "#ffd700"],
-                        [14, "#26cc01"],
-                        [17, "#fe00ed"]
-                    ]
+                {
+                    visibility: "visible",
+                    val: 16,
+                    bgColor: "green",
                 },
-
-                min: 0,
-                max: 20,
-                value: {{ moyenne|default(0) }},
-            });
+                {
+                    visibility: "visible",
+                    val: 20,
+                    bgColor: "gold",
+                },
+            ],
+            type: "normal",
+            thermometer: false,
+            reverse: false,
+            multiBarValueVisibility: "visible",
+            shadow: false,
         });
     </script>
+    
     {# <script>
     new Chart(document.getElementById('progressChart'), {
         type: 'line',
