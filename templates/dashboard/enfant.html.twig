@@ -5,12 +5,7 @@
 {% block body %}
     <div class="container py-4">
 
-        <div>
-            {% if enfant.evaluationMode === 'note' %}
-                <div id="demoGauge">{{ moyenne }}</div>
-            {% else %}
-                <div id="demoGauge"></div>
-            {% endif %}
+        <div style="display:flex; justify-content:space-between">
             <!-- HEADER -->
             <div class="d-flex align-items-center gap-3 mb-4">
                 {# <img src="/images/avatar-default.png" class="rounded-circle" width="80"> #}
@@ -20,6 +15,13 @@
                     {# <p class="text-muted mb-0">Période : {{ periode.type }} {{ periode.numero }}</p> #}
                 </div>
             </div>
+
+            {% if enfant.evaluationMode === 'note' %}
+                <div id="demoGauge" style="width:150px;height:150px;"></div>
+                
+                {# {% else %}
+                <div id="demoGauge"></div> #}
+            {% endif %}
 
         </div>
         
@@ -248,7 +250,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script>
         document.querySelectorAll(".matiere-row").forEach((row) => {
             row.addEventListener("click", () => {
@@ -257,44 +258,45 @@
                     detail.style.display === "table-row" ? "none" : "table-row";
             });
         });
+    </script>
 
+    <script src="{{ asset('js/jquery.simplegauge.js') }}" type="text/javascript" charset="utf-8"></script>
+    <script>
         $(document).ready(function () {
             $("#demoGauge").simpleGauge({
                 container: {
                     style: "background-color: #eee; border-radius: 1000px; border: 4px solid #bbb;",
                     size: 87,
                 },
-                title: {
-                    text: "Moyenne",
-                    style: "color: gray; font-size: 40px; padding: 0px;",
-                },
                 digital: {
-                    text: "{value.3}",
-                    style: "color: auto; font-size: 30px;",
+                    text: {{ moyenne|default(0) }},
+                    style: "color: auto; font-size: 10px; top: 25%",
                 },
                 analog: {
                     numTicks: 6,
-                    minAngle: 180,
-                    maxAngle: 360,
+                    minAngle: 270,
+                    maxAngle: 450,
                     lineWidth: 10,
                     arrowWidth: 20,
                     arrowColor: "#ccc",
                     inset: false,
                 },
-                barColors: [
-                    [0, "#da0202"],
-                    [10, "#fd7f02"],
-                    [14, "rgb(38, 204, 1)"],
-                    [17, "rgb(255, 0, 208)"],
-                ],
+                bars: {
+                    colors: [
+                        [0, "#da0202"],
+                        [7, "#fd7f02"],
+                        [11, "#ffd700"],
+                        [14, "#26cc01"],
+                        [17, "#fe00ed"]
+                    ]
+                },
 
                 min: 0,
                 max: 20,
-                value: 14.11,
+                value: {{ moyenne|default(0) }},
             });
         });
     </script>
-
     {# <script>
     new Chart(document.getElementById('progressChart'), {
         type: 'line',
