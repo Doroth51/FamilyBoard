@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rémunerations — FamilyBoard{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+
+        <h2 class="mb-4">Liste des rémunérations</h2>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Montant</th>
+                    <th>Type</th>
+                    <th>Enfant</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for remuneration in remunerations %}
+                    <tr>
+                        <td>{{ remuneration.id }}</td>
+                        <td>{{ remuneration.date|date('d/m/Y') }}</td>
+                        <td>{{ remuneration.montant }}</td>
+                        <td>{{ remuneration.type.name }}</td>
+                        <td>{{ remuneration.enfant.name }}</td>
+                        <td>
+                            <a href="{{ path('remuneration_show', {id: remuneration.id}) }}" class="btn btn-sm btn-primary">Voir</a>
+                            <a href="{{ path('remuneration_edit', {id: remuneration.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('remuneration_new') }}" class="btn btn-success">Créer une rémunération</a>
+
+    </div>
+{% endblock %}

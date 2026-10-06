@@ -60,6 +60,7 @@
                                                 <th>Libelle</th>
                                                 <th>Note</th>
                                                 <th>Coefficient</th>
+                                                <th>Rémunération</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
@@ -71,8 +72,16 @@
                                                     <td>{{ note.note }} / {{ note.denominateur }}</td>
                                                     <td>{{ note.coefficient|default(1) }}</td>
                                                     <td>
+                                                        {% if note.isRemuneration() and note.remuneration is not empty %}
+                                                            {{ note.remuneration.montant }}
+                                                        {% else %}
+                                                            X
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
                                                         <a href="{{ path('note_show', {id: note.id}) }}">Voir</a>
                                                         <a href="{{ path('note_edit', {id: note.id}) }}">Modifier</a>
+                                                        <a href="{{ path('remuneration_new_by_enfant', {enfantId: enfant.id}) }}">Rémunérer</a>
                                                     </td>
                                                 </tr>
                                             {% else %}
@@ -266,7 +275,7 @@
         var bar = $("#boxMultibar").multibar({
             initValue: [{{ moyenne }}],
             posMarker: "outside",
-            iconMarker: "arrow-down",
+            iconMarker:"arrow-down",
             min: 0,
             max: 20,
             multiBarValue: [

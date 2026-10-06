@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rémunérations{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+
+        <h2 class="mb-4">Rémunération</h2>
+
+        <ul class="list-group mb-4">
+            <li class="list-group-item"><strong>Date :</strong> {{ remuneration.montant }}</li>
+            <li class="list-group-item"><strong>Montant :</strong> {{ remuneration.montant }}</li>
+            <li class="list-group-item"><strong>Type :</strong> {{ remuneration.type }}</li>
+            <li class="list-group-item"><strong>Enfant :</strong> {{ remuneration.enfant }}</li>
+        </ul>
+
+        <a href="{{ path('remuneration_edit', {id: remuneration.id}) }}" class="btn btn-warning">Modifier</a>
+        <a href="{{ path('remuneration_new') }}" class="btn btn-warning">créer</a>
+        <a href="{{ path('remuneration_index') }}" class="btn btn-secondary">Retour</a>
+
+    </div>
+{% endblock %}

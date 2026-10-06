@@ -15,6 +15,8 @@ class RemunerationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $enfant = $options['enfant'];
+
         $builder
             ->add('montant', MoneyType::class, [
                 'label' => 'Montant'
@@ -39,6 +41,7 @@ class RemunerationFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Remuneration::class,
+            'enfant' => null
         ]);
     }
 }
