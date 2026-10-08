@@ -72,11 +72,16 @@
                                                     <td>{{ note.note }} / {{ note.denominateur }}</td>
                                                     <td>{{ note.coefficient|default(1) }}</td>
                                                     <td>
-                                                        {% if note.isRemuneration() and note.remuneration is not empty %}
-                                                            {{ note.remuneration.montant }}
+                                                        {% if note.isRemuneration() %}
+                                                            {% if note.remuneration is not empty %}
+                                                                {{ note.remuneration.montant }}
+                                                            {% else %}
+                                                                A venir  
+                                                            {% endif %}
                                                         {% else %}
-                                                            X
+                                                            Aucune rémunération prévue
                                                         {% endif %}
+                                                        
                                                     </td>
                                                     <td>
                                                         <a href="{{ path('note_show', {id: note.id}) }}">Voir</a>

@@ -46,7 +46,7 @@ class RemunerationController extends AbstractController
             $em->persist($note);
             $em->flush();
 
-            return $this->redirectToRoute('remuneration_index');
+            return $this->redirectToRoute('dashboard_enfant', ["id" => $enfant->getId()]);
         }
 
         return $this->render('remuneration/enfant/new.html.twig', [

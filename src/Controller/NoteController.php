@@ -43,7 +43,7 @@ class NoteController extends AbstractController
             $em->persist($note);
             $em->flush();
 
-            return $this->redirectToRoute('note_index');
+            return $this->redirectToRoute('dashboard_enfant', ["id" => $enfant->getId()]);
         }
 
         return $this->render('note/new.html.twig', [
