@@ -40,6 +40,9 @@ class Remuneration
     #[ORM\OneToMany(targetEntity: Evaluation::class, mappedBy: 'remuneration')]
     private Collection $evaluations;
 
+    #[ORM\ManyToOne(inversedBy: 'remunerations')]
+    private ?Periode $periode = null;
+
     public function __construct()
     {
         $this->notes = new ArrayCollection();
@@ -155,6 +158,18 @@ class Remuneration
                 $evaluation->setRemuneration(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPeriode(): ?Periode
+    {
+        return $this->periode;
+    }
+
+    public function setPeriode(?Periode $periode): static
+    {
+        $this->periode = $periode;
 
         return $this;
     }

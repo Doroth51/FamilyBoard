@@ -8,6 +8,7 @@ use App\Entity\Periode;
 use App\Repository\PeriodeRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -32,7 +33,8 @@ class NoteType extends AbstractType
                 'label' => 'Matière'
             ])
             ->add('libelle', TextareaType::class, [
-                'label' => 'Libelle'
+                'label' => 'Libelle',
+                'required' => false,
             ])
             ->add('note', NumberType::class, [
                 'label' => 'Note'
@@ -42,6 +44,10 @@ class NoteType extends AbstractType
             ])
             ->add('coefficient', IntegerType::class, [
                 'label' => 'Coefficient'
+            ])
+            ->add('isRemuneration', CheckboxType::class, [
+                'label'    => 'Rémunération prévue ?',
+                'required' => false,
             ])
             ->add('date', null, [
                 'widget' => 'single_text',

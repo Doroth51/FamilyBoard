@@ -81,7 +81,7 @@
                                                     <td>
                                                         <a href="{{ path('note_show', {id: note.id}) }}">Voir</a>
                                                         <a href="{{ path('note_edit', {id: note.id}) }}">Modifier</a>
-                                                        <a href="{{ path('remuneration_new_by_enfant', {enfantId: enfant.id}) }}">Rémunérer</a>
+                                                        <a href="{{ path('remuneration_new_by_enfant', {enfantId: enfant.id, noteId: note.id}) }}">Rémunérer</a>
                                                     </td>
                                                 </tr>
                                             {% else %}

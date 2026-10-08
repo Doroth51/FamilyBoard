@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Enfant;
+use App\Entity\Note;
 use App\Entity\Remuneration;
 use App\Form\RemunerationFormType;
 use App\Repository\RemunerationRepository;
@@ -24,9 +25,10 @@ class RemunerationController extends AbstractController
         ]);
     }
 
-    #[Route('/new/{enfantId<\d+>}', name: 'remuneration_new_by_enfant', methods: ['GET', 'POST'])]
+    #[Route('/new/{enfantId<\d+>}/{noteId<\d+>}', name: 'remuneration_new_by_enfant', methods: ['GET', 'POST'])]
     public function newByEnfant(
         #[MapEntity(id: 'enfantId')] Enfant $enfant,
+        #[MapEntity(id: 'noteId')] Note $note,
         Request $request,
         EntityManagerInterface $em
     ): Response {
@@ -39,6 +41,11 @@ class RemunerationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($rem);
             $em->flush();
+
+            $note->setRemuneration($rem);
+            $em->persist($note);
+            $em->flush();
+
             return $this->redirectToRoute('remuneration_index');
         }
 

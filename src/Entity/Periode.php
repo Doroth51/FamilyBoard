@@ -33,10 +33,17 @@ class Periode
     #[ORM\OneToMany(targetEntity: Evaluation::class, mappedBy: 'periode')]
     private Collection $evaluations;
 
+    /**
+     * @var Collection<int, Remuneration>
+     */
+    #[ORM\OneToMany(targetEntity: Remuneration::class, mappedBy: 'periode')]
+    private Collection $remunerations;
+
     public function __construct()
     {
         $this->notes = new ArrayCollection();
         $this->evaluations = new ArrayCollection();
+        $this->remunerations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -128,6 +135,36 @@ class Periode
                 $evaluation->setPeriode(null);
             }
         }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Remuneration>
+     */
+    public function getRemunerations(): Collection
+    {
+        return $this->remunerations;
+    }
+
+    public function addRemuneration(Remuneration $remuneration): static
+    {
+        if (!$this->remunerations->contains($remuneration)) {
+            $this->remunerations->add($remuneration);
+            $remuneration->setPeriode($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRemuneration(Remuneration $remuneration): static
+    {
+        if ($this->remunerations->removeElement($remuneration)) {
+            // set the owning side to null (unless already changed)
+            if ($remuneration->getPeriode() === $this) {
+                $remuneration->setPeriode(null);
+            }
+        }
+
         return $this;
     }
 }
