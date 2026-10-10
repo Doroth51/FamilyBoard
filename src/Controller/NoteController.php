@@ -60,23 +60,29 @@ class NoteController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'note_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Note $note, EntityManagerInterface $em): Response
-    {
-        $form = $this->createForm(NoteType::class, $note);
-        $form->handleRequest($request);
+    // #[Route('/edit/{noteId}/{enfantId}', name: 'note_edit', methods: ['GET', 'POST'])]
+    // public function edit(
+    //     #[MapEntity(id: 'noteId')] Note $note,
+    //     #[MapEntity(id: 'enfantId')] Enfant $enfant,
+    //     Request $request,
+    //     EntityManagerInterface $em
+    // ): Response {
+    //     $form = $this->createForm(NoteType::class, $note, [
+    //         'enfant' => $enfant
+    //     ]);
+    //     $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em->flush();
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $em->flush();
 
-            return $this->redirectToRoute('note_index');
-        }
+    //         return $this->redirectToRoute('note_index');
+    //     }
 
-        return $this->render('note/edit.html.twig', [
-            'note' => $note,
-            'form' => $form,
-        ]);
-    }
+    //     return $this->render('note/edit.html.twig', [
+    //         'note' => $note,
+    //         'form' => $form,
+    //     ]);
+    // }
 
     #[Route('/delete/{id}', name: 'note_delete', methods: ['POST'])]
     public function delete(Request $request, Note $note, EntityManagerInterface $em): Response

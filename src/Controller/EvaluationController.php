@@ -42,7 +42,7 @@ class EvaluationController extends AbstractController
             $em->persist($evaluation);
             $em->flush();
 
-            return $this->redirectToRoute('evaluation_index');
+            return $this->redirectToRoute('dashboard_enfant', ["id" => $enfant->getId()]);
         }
 
         return $this->render('evaluation/new.html.twig', [
@@ -59,32 +59,44 @@ class EvaluationController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'evaluation_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Evaluation $evaluation, EntityManagerInterface $em): Response
-    {
-        $form = $this->createForm(EvaluationType::class, $evaluation);
-        $form->handleRequest($request);
+    // #[Route('/{id}/edit', name: 'evaluation_edit', methods: ['GET', 'POST'])]
+    // public function edit(Request $request, Evaluation $evaluation, EntityManagerInterface $em): Response
+    // {
+    //     $form = $this->createForm(EvaluationType::class, $evaluation);
+    //     $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em->flush();
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $em->flush();
 
-            return $this->redirectToRoute('evaluation_index');
-        }
+    //         return $this->redirectToRoute('evaluation_index');
+    //     }
 
-        return $this->render('evaluation/edit.html.twig', [
-            'evaluation' => $evaluation,
-            'form' => $form,
-        ]);
-    }
+    //     return $this->render('evaluation/edit.html.twig', [
+    //         'evaluation' => $evaluation,
+    //         'form' => $form,
+    //     ]);
+    // }
 
     #[Route('/{id}', name: 'evaluation_delete', methods: ['POST'])]
     public function delete(Request $request, Evaluation $evaluation, EntityManagerInterface $em): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $evaluation->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid(
+            'delete' . $evaluation->getId(),
+            $request->request->get('_token')
+        )) {
+
+            $remuneration = $evaluation->getRemuneration();
+            if ($remuneration) {
+                $em->remove($remuneration);
+            }
             $em->remove($evaluation);
             $em->flush();
+
+            $this->addFlash('success', 'L\'évaluation a été supprimée.');
         }
 
-        return $this->redirectToRoute('evaluation_index');
+        return $this->redirectToRoute('enfant_show', [
+            'id' => $evaluation->getEnfant()->getId()
+        ]);
     }
 }

@@ -17,11 +17,9 @@
             </div>
 
             {% if enfant.evaluationMode === 'note' %}
-                {# <div id="demoGauge" style="width:150px;height:150px;"></div> #}
-                <div id="boxMultibar" style="width: -webkit-fill-available; padding: 0em 5em 0em 5em;"></div>
-
-                {# {% else %}
-                <div id="demoGauge"></div> #}
+                <div id="boxMultibarNote" style="width: -webkit-fill-available; padding: 0em 5em 0em 5em;"></div>
+            {% else %}
+                <div id="boxMultibarCompetence" style="width: -webkit-fill-available; padding: 0em 5em 0em 5em;"></div>
             {% endif %}
 
         </div>
@@ -90,7 +88,7 @@
                                                             class="btn btn-success btn-sm"
                                                         >Voir</a>
                                                         <a
-                                                            href="{{ path('note_edit', {id: note.id}) }}"
+                                                            {# href="{{ path('note_edit', {noteId: note.id, enfantId: enfant.id}) }}" #}
                                                             type="button"
                                                             class="btn btn-sm btn-warning"
                                                         >Modifier</a>
@@ -103,7 +101,7 @@
                                                             Supprimer
                                                         </button>
                                                         <a
-                                                            href="{{ path('remuneration_new_by_enfant', {enfantId: enfant.id, noteId: note.id}) }}"
+                                                            href="{{ path('new_remuneration_note_by_enfant', {enfantId: enfant.id, noteId: note.id}) }}"
                                                             type="button"
                                                             class="btn btn-info btn-sm"
                                                         >Rémunérer</a>
@@ -226,10 +224,93 @@
                                                 <td>{{ evaluation.libelle }}</td>
                                                 <td>{{ evaluation.niveau }}</td>
                                                 <td>
-                                                    <a href="{{ path('evaluation_show', {id: evaluation.id}) }}">Voir</a>
-                                                    <a href="{{ path('evaluation_edit', {id: evaluation.id}) }}">Modifier</a>
+                                                    <a
+                                                        href="{{ path('evaluation_show', {id: evaluation.id}) }}"
+                                                        type="button"
+                                                        class="btn btn-success btn-sm"
+                                                    >Voir</a>
+                                                    <a
+                                                        {# href="{{ path('evaluation_edit', {id: evaluation.id}) }}" #}
+                                                        type="button"
+                                                        class="btn btn-warning btn-sm"
+                                                    >Modifier</a>
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-danger btn-sm"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#deleteModal{{ evaluation.id }}"
+                                                    >
+                                                        Supprimer
+                                                    </button>
+                                                    <a
+                                                        href="{{ path('new_remuneration_evaluation_by_enfant', {enfantId: enfant.id, evaluationId: evaluation.id}) }}"
+                                                        type="button"
+                                                        class="btn btn-info btn-sm"
+                                                    >Rémunérer</a>
                                                 </td>
                                             </tr>
+                                            <div
+                                                class="modal fade"
+                                                id="deleteModal{{ evaluation.id }}"
+                                                tabindex="-1"
+                                                aria-labelledby="deleteModalLabel{{ evaluation.id }}"
+                                                aria-hidden="true"
+                                            >
+
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+
+                                                        <div class="modal-header">
+                                                            <h5
+                                                                class="modal-title"
+                                                                id="deleteModalLabel{{ evaluation.id }}"
+                                                            >
+                                                                Confirmation
+                                                            </h5>
+
+                                                            <button
+                                                                type="button"
+                                                                class="btn-close"
+                                                                data-bs-dismiss="modal"
+                                                                aria-label="Close"
+                                                            >
+                                                            </button>
+                                                        </div>
+
+                                                        <div class="modal-body">
+                                                            Êtes-vous sûr de vouloir supprimer l'évaluation ?
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button
+                                                                type="button"
+                                                                class="btn btn-secondary"
+                                                                data-bs-dismiss="modal"
+                                                            >
+                                                                Annuler
+                                                            </button>
+                                                            <form
+                                                                method="post"
+                                                                ,
+                                                                action="{{ path('evaluation_delete', {id: evaluation.id}) }}"
+                                                            >
+                                                                <input
+                                                                    type="hidden"
+                                                                    name="_token"
+                                                                    value="{{ csrf_token('delete' ~ evaluation.id) }}"
+                                                                >
+
+                                                                <button
+                                                                    type="submit"
+                                                                    class="btn btn-danger"
+                                                                >
+                                                                    Supprimer
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         {% else %}
                                             <tr>
                                                 <td colspan="3">Aucune évaluation</td>
@@ -359,7 +440,7 @@
 
     <script src="{{ asset('js/multibar.js') }}" type="text/javascript" charset="utf-8"></script>
     <script>
-        var bar = $("#boxMultibar").multibar({
+        var bar = $("#boxMultibarNote").multibar({
             initValue: [{{ moyenne }}],
             posMarker: "outside",
             iconMarker:"arrow-down",
@@ -389,8 +470,43 @@
                 {
                     visibility: "visible",
                     val: 20,
-                    bgColor: "gold",
+                    bgColor: "blue",
                 },
+            ],
+            type: "normal",
+            thermometer: false,
+            reverse: false,
+            multiBarValueVisibility: "visible",
+            shadow: false,
+        });
+
+        var bar = $("#boxMultibarCompetence").multibar({
+            initValue: [{{ moyenne }}],
+            posMarker: "outside",
+            iconMarker:"arrow-down",
+            min: 0,
+            max: 4,
+            multiBarValue: [
+                {
+                    visibility: "visible",
+                    val: 1,
+                    bgColor: "red",
+                },
+                {
+                    visibility: "visible",
+                    val: 2,
+                    bgColor: "orange",
+                },
+                {
+                    visibility: "visible",
+                    val: 3,
+                    bgColor: "green",
+                },
+                {
+                    visibility: "visible",
+                    val: 4,
+                    bgColor: "blue",
+                }
             ],
             type: "normal",
             thermometer: false,

@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Entity\Enfant;
 use App\Entity\Periode;
-use App\Entity\Remuneration;
 
 class RemunerationSyntheseService
 {

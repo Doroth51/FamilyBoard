@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Enfant;
+use App\Entity\Evaluation;
+use App\Repository\EvaluationRepository;
 use App\Repository\NoteRepository;
 use App\Repository\PeriodeRepository;
 use App\Repository\RemunerationRepository;
@@ -20,6 +22,7 @@ class DashboardEnfantController extends AbstractController
         Enfant $enfant,
         NoteRepository $noteRepo,
         PeriodeRepository $periodeRepo,
+        EvaluationRepository $evaluationRepo,
         RemunerationRepository $remRepo,
         ObjectifRepository $objRepo,
         CalculService $calculService
@@ -123,6 +126,8 @@ class DashboardEnfantController extends AbstractController
             // ];
         } else { //evaluation
             $evaluations = $enfant->getEvaluations()->toArray();
+
+            $scores = [];
             $evaluationsParMatiere = [];
             foreach ($evaluations as $evaluation) {
                 $matiere = $evaluation->getMatiere()->getName();
@@ -130,7 +135,13 @@ class DashboardEnfantController extends AbstractController
                     $evaluationsParMatiere[$matiere] = [];
                 }
                 $evaluationsParMatiere[$matiere][] = $evaluation;
+                $competence = $evaluation->getNiveau();
+                $score = $this->getScore($competence);
+                if (!is_null($score))
+                    $scores[] = $score;
             }
+
+            $moyenneGenerale = $this->getScoreMoyen($scores);
         }
 
         // Période en cours (ou dernière période)
@@ -174,5 +185,43 @@ class DashboardEnfantController extends AbstractController
             'evaluationsParMatiere' => $evaluationsParMatiere ?? [],
             'enfant' => $enfant
         ]);
+    }
+
+    private function getScore(string $competence)
+    {
+        $score = null;
+        switch ($competence) {
+            case 'MI':
+                $score = 1;
+                break;
+            case 'MF':
+                $score = 2;
+                break;
+            case 'MS':
+                $score = 3;
+                break;
+            case 'TBM':
+                $score = 4;
+                break;
+            default:
+                break;
+        }
+        return $score;
+    }
+
+    private function getScoreMoyen($scores)
+    {
+        $nbCompetences = count($scores);
+        $total = 0;
+        $moyenne = null;
+        if (!empty($scores)) {
+            foreach ($scores as $score) {
+                $total += $score;
+            }
+
+            $moyenne = $total / $nbCompetences;
+        }
+
+        return $moyenne;
     }
 }

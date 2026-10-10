@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Enfant;
+use App\Entity\Evaluation;
 use App\Entity\Note;
 use App\Entity\Remuneration;
 use App\Form\RemunerationFormType;
@@ -25,8 +26,8 @@ class RemunerationController extends AbstractController
         ]);
     }
 
-    #[Route('/new/{enfantId<\d+>}/{noteId<\d+>}', name: 'remuneration_new_by_enfant', methods: ['GET', 'POST'])]
-    public function newByEnfant(
+    #[Route('/new/{enfantId<\d+>}/{noteId<\d+>}', name: 'new_remuneration_note_by_enfant', methods: ['GET', 'POST'])]
+    public function newRemunerationNoteByEnfant(
         #[MapEntity(id: 'enfantId')] Enfant $enfant,
         #[MapEntity(id: 'noteId')] Note $note,
         Request $request,
@@ -44,6 +45,36 @@ class RemunerationController extends AbstractController
 
             $note->setRemuneration($rem);
             $em->persist($note);
+            $em->flush();
+
+            return $this->redirectToRoute('dashboard_enfant', ["id" => $enfant->getId()]);
+        }
+
+        return $this->render('remuneration/enfant/new.html.twig', [
+            'remuneration' => $rem,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/new/{enfantId<\d+>}/{evaluationId<\d+>}', name: 'new_remuneration_evaluation_by_enfant', methods: ['GET', 'POST'])]
+    public function newRemunerationEvaluationByEnfant(
+        #[MapEntity(id: 'enfantId')] Enfant $enfant,
+        #[MapEntity(id: 'evaluationId')] Evaluation $evaluation,
+        Request $request,
+        EntityManagerInterface $em
+    ): Response {
+        $rem = new Remuneration();
+        $rem->setEnfant($enfant);
+
+        $form = $this->createForm(RemunerationFormType::class, $rem);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($rem);
+            $em->flush();
+
+            $evaluation->setRemuneration($rem);
+            $em->persist($evaluation);
             $em->flush();
 
             return $this->redirectToRoute('dashboard_enfant', ["id" => $enfant->getId()]);
