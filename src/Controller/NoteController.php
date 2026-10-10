@@ -78,14 +78,26 @@ class NoteController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'note_delete', methods: ['POST'])]
+    #[Route('/delete/{id}', name: 'note_delete', methods: ['POST'])]
     public function delete(Request $request, Note $note, EntityManagerInterface $em): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $note->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid(
+            'delete' . $note->getId(),
+            $request->request->get('_token')
+        )) {
+
+            $remuneration = $note->getRemuneration();
+            if ($remuneration) {
+                $em->remove($remuneration);
+            }
             $em->remove($note);
             $em->flush();
+
+            $this->addFlash('success', 'La note a été supprimée.');
         }
 
-        return $this->redirectToRoute('note_index');
+        return $this->redirectToRoute('enfant_show', [
+            'id' => $note->getEnfant()->getId()
+        ]);
     }
 }

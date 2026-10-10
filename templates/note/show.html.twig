@@ -3,7 +3,7 @@
 {% block title %}Détail de la note{% endblock %}
 
 {% block body %}
-    <h1>{{ note.matiere }}</h1>
+    <h1>{{ note.matiere.name }}</h1>
 
     <p>Note : {{ note.note }}/{{ note.denominateur }}</p>
     <p>Coefficient : {{ note.coefficient }}</p>
