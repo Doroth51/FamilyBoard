@@ -19,8 +19,11 @@
 
         <nav class="navbar" style="background-color: #e3f2fd;" data-bs-theme="light">
             <div class="container-fluid">
-
-                <a class="navbar-brand fw-bold" href="{{ path('home') }}">FamilyBoard</a>
+                {% if app.user %}
+                    <a class="navbar-brand fw-bold" href="{{ path('dashboard_parent') }}">FamilyBoard</a>
+                {% else %}
+                    <a class="navbar-brand fw-bold" href="{{ path('home') }}">FamilyBoard</a>    
+                {% endif %}
 
                 <button
                     class="navbar-toggler"
@@ -42,6 +45,15 @@
                                 </a>
                             </li>
 
+                            {% if app.request.attributes.get('_route') == 'dashboard_parent' %}
+                                {% for enfant in enfants %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ path('dashboard_enfant', { id: enfant.id }) }}">
+                                            {{ enfant.name }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ path('app_logout') }}">
                                     Déconnexion
