@@ -126,19 +126,42 @@ class DashboardEnfantController extends AbstractController
             // ];
         } else { //evaluation
             $evaluations = $enfant->getEvaluations()->toArray();
-
             $scores = [];
             $evaluationsParMatiere = [];
+
             foreach ($evaluations as $evaluation) {
-                $matiere = $evaluation->getMatiere()->getName();
-                if (!isset($evaluationsParMatiere[$matiere])) {
-                    $evaluationsParMatiere[$matiere] = [];
+                $nomMatiere = $evaluation->getMatiere()->getName();
+
+                if (!isset($evaluationsParMatiere[$nomMatiere])) {
+                    $evaluationsParMatiere[$nomMatiere] = [
+                        'evaluations' => [],
+                        'scoreMoyen' => 0,
+                    ];
                 }
-                $evaluationsParMatiere[$matiere][] = $evaluation;
-                $competence = $evaluation->getNiveau();
-                $score = $this->getScore($competence);
-                if (!is_null($score))
+
+                $evaluationsParMatiere[$nomMatiere]['evaluations'][] = $evaluation;
+
+                $score = $this->getScore($evaluation->getNiveau());
+
+                if (!is_null($score)) {
                     $scores[] = $score;
+                }
+            }
+
+            foreach ($evaluationsParMatiere as $nomMatiere => $data) {
+
+                $scoresMatiere = [];
+
+                foreach ($data['evaluations'] as $evaluation) {
+                    $score = $this->getScore($evaluation->getNiveau());
+
+                    if (!is_null($score)) {
+                        $scoresMatiere[] = $score;
+                    }
+                }
+
+                $evaluationsParMatiere[$nomMatiere]['scoreMoyen']
+                    = $this->getScoreMoyen($scoresMatiere);
             }
 
             $moyenneGenerale = $this->getScoreMoyen($scores);
@@ -209,14 +232,14 @@ class DashboardEnfantController extends AbstractController
         return $score;
     }
 
-    private function getScoreMoyen($scores)
+    private function getScoreMoyen(array $scores)
     {
         $nbCompetences = count($scores);
         $total = 0;
         $moyenne = null;
         if (!empty($scores)) {
             foreach ($scores as $score) {
-                $total += $score;
+                $total += intval($score);
             }
 
             $moyenne = $total / $nbCompetences;

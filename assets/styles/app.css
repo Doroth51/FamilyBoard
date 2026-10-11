@@ -58,7 +58,51 @@ body {
     border: 2px solid #198754 !important;
 }
 
-#demoGauge2 {
-    width: 20em;
-    height: 20em;
+.notes-table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.col-note-date {
+    width: 10%;
+}
+
+.col-note-libelle {
+    width: 28%;
+}
+
+.col-note-note {
+    width: 8%;
+}
+
+.col-note-coef {
+    width: 10%;
+}
+
+.col-note-rem {
+    width: 22%;
+}
+
+.col-note-actions {
+    width: 22%;
+}
+
+.col-eval-date{
+    width: 10%;
+}
+
+.col-eval-libelle{
+    width: 28%;
+}
+
+.col-eval-appreciation{
+    width: 18%;
+}
+
+.col-eval-rem {
+    width: 22%;
+}
+
+.col-eval-actions{
+    width: 22%;
 }
