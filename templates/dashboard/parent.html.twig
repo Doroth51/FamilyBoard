@@ -4,9 +4,11 @@
 
 {% block body %}
     <div class="container py-4">
-
-        <h1 class="mb-4">Tableau de bord familial</h1>
-
+        <div class="row">
+            <h1 class="mb-4">Tableau de bord familial</h1>
+            <a href="{{ path('enfant_new') }}" class="btn btn-success btn-sm mb-3">Ajouter un enfant</a>
+        </div>
+        
         <!-- Résumé global -->
         {# <div class="row g-3 mb-4">
 
