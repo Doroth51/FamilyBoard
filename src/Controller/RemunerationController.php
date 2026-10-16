@@ -86,12 +86,14 @@ class RemunerationController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'remuneration_new', methods: ['GET', 'POST'])]
-    public function new(
+    #[Route('/remuneration/new/{enfantId<\d+>}', name: 'remuneration_new', methods: ['GET', 'POST'])]
+    public function newRemuneration(
+        #[MapEntity(id: 'enfantId')] Enfant $enfant,
         Request $request,
         EntityManagerInterface $em
     ): Response {
         $rem = new Remuneration();
+        $rem->setEnfant($enfant);
 
         $form = $this->createForm(RemunerationFormType::class, $rem);
         $form->handleRequest($request);
@@ -99,7 +101,7 @@ class RemunerationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($rem);
             $em->flush();
-            return $this->redirectToRoute('remuneration_index');
+            return $this->redirectToRoute('dashboard_enfant', ["id" => $enfant->getId()]);
         }
 
         return $this->render('remuneration/new.html.twig', [
