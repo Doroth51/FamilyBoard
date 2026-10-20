@@ -24,6 +24,21 @@ class Enfant
     #[ORM\Column(length: 20)]
     private ?string $evaluationMode = null; // 'note' ou 'evaluation'
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $avatar = null;
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): self
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
     /**
      * @var Collection<int, FamilyGroup>
      */
