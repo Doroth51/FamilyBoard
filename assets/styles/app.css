@@ -110,3 +110,13 @@ body {
 .section{
     margin-bottom: 3em;
 }
+
+.avatar-choice {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.avatar-choice:hover {
+    transform: scale(1.08);
+    border: 3px solid #0d6efd !important;
+}

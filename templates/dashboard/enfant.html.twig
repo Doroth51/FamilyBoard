@@ -8,7 +8,79 @@
         <div style="display:flex; justify-content:space-between">
             <!-- HEADER -->
             <div class="d-flex align-items-center gap-3 mb-4">
-                <img src="{{ asset('images/avatars/' ~ enfant.avatar) }}" alt="Avatar" class="rounded-circle" width="80"> 
+
+                <div
+                    class="position-relative d-inline-block"
+                    data-bs-toggle="modal"
+                    data-bs-target="#avatarModal"
+                    style="cursor:pointer;"
+                >
+                    <img
+                        src="{{ asset('images/avatars/' ~ enfant.avatar) }}"
+                        alt="Avatar"
+                        class="rounded-circle"
+                        width="130"
+                    >
+
+                    <span class="avatar-edit-icon">
+                        <i class="bi bi-camera-fill"></i>
+                    </span>
+                </div>
+    
+                <div class="modal fade" id="avatarModal" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="avatarModalLabel">
+                                    Choisir un avatar
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <div class="modal-body">
+                                <div class="row g-3">
+
+                                    {% for avatar in avatars %}
+                                        <div class="col-4 col-md-3 text-center">
+                                            <form
+                                                method="post"
+                                                action="{{ path('enfant_change_avatar', {'id': enfant.id}) }}"
+                                            >
+
+                                                <input
+                                                    type="hidden"
+                                                    name="avatar"
+                                                    value="{{ avatar }}"
+                                                >
+
+                                                <button
+                                                    type="submit"
+                                                    class="btn p-0 border-0 bg-transparent"
+                                                >
+
+                                                    <img
+                                                        src="{{ asset('images/avatars/' ~ avatar) }}"
+                                                        alt="{{ avatar }}"
+                                                        class="rounded-circle border avatar-choice"
+                                                        width="100"
+                                                        height="100"
+                                                    >
+
+                                                </button>
+                                            </form>
+                                        </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
                 <div>
                     <h1 class="mb-1">{{ enfant.name }}</h1>
                     <p class="text-muted mb-0">{{ enfant.classe.name }}</p>
@@ -17,9 +89,9 @@
             </div>
 
             {% if enfant.evaluationMode === 'note' %}
-                <div id="boxMultibarNote" style="width: -webkit-fill-available; padding: 0em 5em 0em 5em;"></div>
+                <div id="boxMultibarNote" style="width: -webkit-fill-available; padding: 2em 5em 0em 5em;"></div>
             {% else %}
-                <div id="boxMultibarCompetence" style="width: -webkit-fill-available; padding: 0em 5em 0em 5em;"></div>
+                <div id="boxMultibarCompetence" style="width: -webkit-fill-available; padding: 2em 5em 0em 5em;"></div>
             {% endif %}
 
         </div>

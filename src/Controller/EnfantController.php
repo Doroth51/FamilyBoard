@@ -33,6 +33,7 @@ class EnfantController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var User $user */
             $user = $this->getUser();
+            $enfant->setAvatar('avatar_default.png');
 
             // On récupère le groupe du parent
             $group = $user->getFamilyGroups()->first();
@@ -88,5 +89,25 @@ class EnfantController extends AbstractController
         }
 
         return $this->redirectToRoute('enfant_index');
+    }
+
+    #[Route('/enfant/{id}/avatar', name: 'enfant_change_avatar', methods: ['POST'])]
+    public function changeAvatar(
+        Request $request,
+        Enfant $enfant,
+        EntityManagerInterface $em
+    ): Response {
+
+        $avatar = $request->request->get('avatar');
+
+        $enfant->setAvatar($avatar);
+
+        $em->flush();
+
+        $this->addFlash('success', 'Avatar modifié');
+
+        return $this->redirectToRoute('dashboard/enfant.html.twig', [
+            'id' => $enfant->getId()
+        ]);
     }
 }

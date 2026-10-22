@@ -12,6 +12,7 @@ use App\Repository\RemunerationRepository;
 use App\Repository\ObjectifRepository;
 use App\Service\CalculService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -198,6 +199,18 @@ class DashboardEnfantController extends AbstractController
         //     $rewardValues[] = $r->getMontant();
         // }
 
+        $finder = new Finder();
+        $finder->files()->in($this->getParameter('kernel.project_dir') . '/public/images/avatars');
+
+        $avatars = [];
+
+        foreach ($finder as $file) {
+            $avatars[] = $file->getFilename();
+        }
+
+        sort($avatars);
+
+
         return $this->render('dashboard/enfant.html.twig', [
             'matieres' => $matieres,
             'moyenne' => $moyenneGenerale,
@@ -205,6 +218,7 @@ class DashboardEnfantController extends AbstractController
             'enfant' => $enfant,
             'remunerations' => $remunerations,
             'totauxParType' => $totauxParType,
+            'avatars' => $avatars
         ]);
     }
 

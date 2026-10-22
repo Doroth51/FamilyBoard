@@ -56,7 +56,7 @@ class RemunerationController extends AbstractController
         ]);
     }
 
-    #[Route('/new/{enfantId<\d+>}/{evaluationId<\d+>}', name: 'new_remuneration_evaluation_by_enfant', methods: ['GET', 'POST'])]
+    #[Route('/evaluation/new/{enfantId<\d+>}/{evaluationId<\d+>}', name: 'new_remuneration_evaluation_by_enfant', methods: ['GET', 'POST'])]
     public function newRemunerationEvaluationByEnfant(
         #[MapEntity(id: 'enfantId')] Enfant $enfant,
         #[MapEntity(id: 'evaluationId')] Evaluation $evaluation,
@@ -80,7 +80,7 @@ class RemunerationController extends AbstractController
             return $this->redirectToRoute('dashboard_enfant', ["id" => $enfant->getId()]);
         }
 
-        return $this->render('remuneration/enfant/new.html.twig', [
+        return $this->render('remuneration/enfant/evaluation/new.html.twig', [
             'remuneration' => $rem,
             'form' => $form,
         ]);
