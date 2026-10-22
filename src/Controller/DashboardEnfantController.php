@@ -200,12 +200,13 @@ class DashboardEnfantController extends AbstractController
         // }
 
         $finder = new Finder();
-        $finder->files()->in($this->getParameter('kernel.project_dir') . '/public/images/avatars');
+        $finder->files()->in($this->getParameter('kernel.project_dir') . '/assets/images/avatars');
 
         $avatars = [];
 
         foreach ($finder as $file) {
-            $avatars[] = $file->getFilename();
+            if ($file->getFilename() !== "avatar_default.png")
+                $avatars[] = $file->getFilename();
         }
 
         sort($avatars);

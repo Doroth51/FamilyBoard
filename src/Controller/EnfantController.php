@@ -106,8 +106,6 @@ class EnfantController extends AbstractController
 
         $this->addFlash('success', 'Avatar modifié');
 
-        return $this->redirectToRoute('dashboard/enfant.html.twig', [
-            'id' => $enfant->getId()
-        ]);
+        return $this->redirectToRoute('dashboard_enfant', ["id" => $enfant->getId()]);
     }
 }
