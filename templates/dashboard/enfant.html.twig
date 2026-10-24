@@ -423,172 +423,87 @@
         </div>
 
         <div class="section">
-            <div class="d-flex align-items-center gap-3 mb-4">
+            <div class="d-flex align-items-center gap-2 mb-4">
                 <h2>Rémunérations</h2>
                 <a href="{{ path('remuneration_new', {enfantId: enfant.id}) }}" class="btn btn-success">Ajouter une rémunération</a> 
             </div>
 
-            <div class="card mt-4">
-                <div class="card-header">                    <h5 class="mb-0">Classement par type de rémunération</h5>
-                </div>
+            <div class="remunerations-section" style="display:flex;">
+                <div class="remuneration-detail col-5" style="margin-right:13em">
+                    <div class="card">
+                        <div class="card-header">                    
+                            <h5 class="mb-0">Classement par type de rémunération</h5>
+                        </div>
 
-                <div class="card-body p-0">
-                    <table class="table table-hover mb-0">
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th class="text-center">Nombre</th> 
-                                <th class="text-end">Total gagné</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for type, infos in totauxParType %}
-                                <tr>
-                                    <td>{{ type }}</td>
-                                    <td class="text-center">{{ infos.nombre }}</td> 
-                                    <td class="text-end">
-                                        {{ infos.total|number_format(2, ',', ' ') }} €
-                                    </td>
-                                </tr>
-                            {% else %}
-                                <tr>
-                                    <td colspan="3" class="text-center">
-                                        Aucune rémunération
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                        <tfoot>
-                            <tr class="table-success fw-bold">
-                                <td>Total</td>
-                                <td class="text-center">
-                                    {{ totauxParType|reduce((c, i) => c + i.nombre, 0) }}
-                                </td>
-                                <td class="text-end">
-                                    {{
+                        <div class="card-body p-0">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th class="text-center">Nombre</th> 
+                                        <th class="text-end">Total gagné</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for type, infos in totauxParType %}
+                                        <tr>
+                                            <td>{{ type }}</td>
+                                            <td class="text-center">{{ infos.nombre }}</td> 
+                                            <td class="text-end">
+                                                {{ infos.total|number_format(2, ',', ' ') }} €
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="3" class="text-center">
+                                                Aucune rémunération
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tfoot>
+                                    <tr class="table-success fw-bold">
+                                        <td>Total</td>
+                                        <td class="text-center">
+                                            {{ totauxParType|reduce((c, i) => c + i.nombre, 0) }}
+                                        </td>
+                                        <td class="text-end">
+                                            {{
                             totauxParType|reduce((c, i) => c + i.total, 0)
                             |number_format(2, ',', ' ')
                         }} €
-                                </td>
-                            </tr>
-                        </tfoot> 
-                    </table>
-                </div>
-            </div>
-            {# <div class="card mt-4">
-                <div class="card-header">
-                    Répartition des rémunérations par type
-                </div>
-
-                <div class="card-body">
-                    <canvas id="remunerationChart"></canvas>
-                </div>
-            </div> #}
-            {# <ul class="list-group mt-3">
-                {% for r in remunerations %}
-                    <li class="list-group-item d-flex justify-content-between">
-                        <span>{{ r.type.name }} — {{ r.date|date('d/m/Y') }}</span>
-                        <strong>{{ r.montant }} €</strong>
-                    </li>
-                {% else %}
-                    <li class="list-group-item text-muted">Aucune récompense pour le moment.</li>
-                {% endfor %}
-            </ul> #}
-        </div>
-        {# <!-- PROGRESSION -->
-        <div class="card shadow-sm p-3 mb-4">
-            <h4 class="mb-3">Progression scolaire</h4>
-            <canvas id="progressChart"></canvas>
-        </div>
-
-        <!-- NOTES RÉCENTES -->
-        <div class="card shadow-sm p-3 mb-4">
-            <h4 class="mb-3">Dernières notes</h4>
-
-            {% for note in notes %}
-                <div class="border rounded p-3 mb-2">
-                    <strong>{{ note.matiere.name }}</strong> — {{ note.note }}/{{ note.denominateur }}
-                    <p class="text-muted mb-0">{{ note.appreciation }}</p>
-                </div>
-            {% else %}
-                <p class="text-muted">Aucune note pour le moment.</p>
-            {% endfor %}
-        </div>
-
-        <!-- RÉCOMPENSES -->
-        <div class="card shadow-sm p-3 mb-4">
-            <h4 class="mb-3">Récompenses</h4>
-
-            <canvas id="rewardChart"></canvas>
-
-            <ul class="list-group mt-3">
-                {% for r in remunerations %}
-                    <li class="list-group-item d-flex justify-content-between">
-                        <span>{{ r.type.name }} — {{ r.date|date('d/m/Y') }}</span>
-                        <strong>{{ r.montant }} €</strong>
-                    </li>
-                {% else %}
-                    <li class="list-group-item text-muted">Aucune récompense pour le moment.</li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <!-- OBJECTIFS -->
-        <div class="card shadow-sm p-3 mb-4">
-            <h4 class="mb-3">Objectifs</h4>
-
-            {% for objectif in objectifs %}
-                <div class="mb-3">
-                    <strong>{{ objectif.titre }}</strong>
-                    <div class="progress mt-2">
-                        <div
-                            class="progress-bar"
-                            role="progressbar"
-                            style="width: {{ objectif.progression }}%"
-                        >
-                            {{ objectif.progression }}%
+                                        </td>
+                                    </tr>
+                                </tfoot> 
+                            </table>
                         </div>
                     </div>
                 </div>
-            {% else %}
-                <p class="text-muted">Aucun objectif défini.</p>
-            {% endfor %}
-        </div>
+            
+                <div class="remuneration-graph col-6" style="width:20%">
+                    <canvas id="remunerationChart"></canvas>
+                    {# <div class="card mt-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Répartition des rémunérations par type</h5>
+                        </div>
 
-        <!-- Section XP + Niveau -->
-        <div class="card shadow-sm p-3 mb-4 text-center">
-            <h4 class="mb-2">Progression du niveau</h4>
-
-            <p class="mb-1">Niveau : <strong>{{ enfant.niveau }}</strong></p>
-            <p class="text-muted">XP : {{ enfant.xp }}/{{ enfant.xpRequiredForNextLevel() }}</p>
-
-            <div class="progress mt-2">
-                <div
-                    class="progress-bar bg-success"
-                    style="width: {{ (enfant.xp / enfant.xpRequiredForNextLevel()) * 100 }}%"
-                >
+                        <div class="card-body" style="width:60%;">
+                            <canvas id="remunerationChart"></canvas>
+                        </div>
+                    </div> #}
+                    {# <ul class="list-group mt-3">
+                        {% for r in remunerations %}
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>{{ r.type.name }} — {{ r.date|date('d/m/Y') }}</span>
+                                <strong>{{ r.montant }} €</strong>
+                            </li>
+                        {% else %}
+                            <li class="list-group-item text-muted">Aucune récompense pour le moment.</li>
+                        {% endfor %}
+                    </ul> #}
                 </div>
             </div>
         </div>
-
-        <!-- Section Badges -->
-        <div class="card shadow-sm p-3 mb-4">
-            <h4 class="mb-3">Badges obtenus</h4>
-
-            <div class="d-flex flex-wrap gap-3">
-                {% for badge in enfant.badges %}
-                    <div class="border rounded p-3 text-center" style="width: 120px;">
-                        <div class="fs-1">{{ badge.icone }}</div>
-                        <strong>{{ badge.nom }}</strong>
-                        <p class="text-muted small">{{ badge.dateObtention|date('d/m/Y') }}</p>
-                    </div>
-                {% else %}
-                    <p class="text-muted">Aucun badge pour le moment.</p>
-                {% endfor %}
-            </div>
-        </div> #}
-
-
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -674,65 +589,46 @@
             shadow: false,
         });
 
-    const labels = [
-        {% for type, infos in totauxParType %}
-            "{{ type }}"{% if not loop.last %},{% endif %}
-        {% endfor %}
-    ];
+        const labels = [
+            {% for type, infos in totauxParType %}
+                "{{ type }}"{% if not loop.last %},{% endif %}
+            {% endfor %}
+        ];
 
-    const data = [
-        {% for type, infos in totauxParType %}
-            {{ infos.total }}{% if not loop.last %},{% endif %}
-        {% endfor %}
-    ];
+        const data = [
+            {% for type, infos in totauxParType %}
+                {{ infos.total }}{% if not loop.last %},{% endif %}
+            {% endfor %}
+        ];
 
-    new Chart(document.getElementById('remunerationChart'), {
-        type: 'pie',
-        data: {
-            labels: labels,
-            datasets: [{
-                data: data,
-                backgroundColor: [
-                    '#4CAF50',
-                    '#2196F3',
-                    '#FFC107',
-                    '#F44336',
-                    '#9C27B0',
-                    '#00BCD4'
-                ]
-            }]
-        }
-    });
-
-
+        new Chart(document.getElementById('remunerationChart'), {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: data,
+                    backgroundColor: [
+                        '#00BCD4',
+                        '#FFC107',
+                        '#9C27B0',
+                        '#4CAF50',
+                        '#F44336',
+                        '#2196F3',
+                    ]
+                }],
+                labels: labels
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        align: 'start',
+                        labels: {
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    }
+                }
+            }
+        });
     </script>
-    
-    {# <script>
-    new Chart(document.getElementById('progressChart'), {
-        type: 'line',
-        data: {
-            labels: {{ labels|json_encode|raw }},
-            datasets: [{
-                label: 'Progression',
-                data: {{ progression|json_encode|raw }},
-                borderColor: '#0d6efd',
-                tension: 0.3
-            }]
-        }
-    });
-
-    new Chart(document.getElementById('rewardChart'), {
-        type: 'bar',
-        data: {
-            labels: {{ rewardLabels|json_encode|raw }},
-            datasets: [{
-                label: 'Récompenses (€)',
-                data: {{ rewardValues|json_encode|raw }},
-                backgroundColor: '#198754'
-            }]
-        }
-    });
-
-    
-</script> #}
 {% endblock %}
