@@ -161,9 +161,20 @@ class DashboardEnfantController extends AbstractController
         // Rémunérations
         $remunerations = $remRepo->findBy(['enfant' => $enfant], ['date' => 'DESC']);
         $totauxParType = [];
+        $remunerationsParType = [];
 
         foreach ($remunerations as $remuneration) {
             $type = $remuneration->getType()->getName();
+
+            if (!isset($remunerationsParType[$type])) {
+                $remunerationsParType[$type] = [
+                    'remunerations' => [],
+                    'montantTotal' => 0,
+                ];
+            }
+
+            $remunerationsParType[$type]['remunerations'][] = $remuneration;
+            $remunerationsParType[$type]['montantTotal'] += $remuneration->getMontant();
 
             if (!isset($totauxParType[$type])) {
                 $totauxParType[$type] = [
@@ -218,6 +229,7 @@ class DashboardEnfantController extends AbstractController
             'evaluationsParMatiere' => $evaluationsParMatiere ?? [],
             'enfant' => $enfant,
             'remunerations' => $remunerations,
+            'remunerationsParType' => $remunerationsParType,
             'totauxParType' => $totauxParType,
             'avatars' => $avatars
         ]);

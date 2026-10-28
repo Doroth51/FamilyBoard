@@ -43,6 +43,12 @@ class Remuneration
     #[ORM\ManyToOne(inversedBy: 'remunerations')]
     private ?Periode $periode = null;
 
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Note $note = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Evaluation $evaluation = null;
+
     public function __construct()
     {
         $this->notes = new ArrayCollection();
@@ -170,6 +176,30 @@ class Remuneration
     public function setPeriode(?Periode $periode): static
     {
         $this->periode = $periode;
+
+        return $this;
+    }
+
+    public function getNote(): ?Note
+    {
+        return $this->note;
+    }
+
+    public function setNote(?Note $note): static
+    {
+        $this->note = $note;
+
+        return $this;
+    }
+
+    public function getEvaluation(): ?Evaluation
+    {
+        return $this->evaluation;
+    }
+
+    public function setEvaluation(?Evaluation $evaluation): static
+    {
+        $this->evaluation = $evaluation;
 
         return $this;
     }
