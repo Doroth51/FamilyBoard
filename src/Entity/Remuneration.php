@@ -173,7 +173,7 @@ class Remuneration
         return $this->periode;
     }
 
-    public function setPeriode(?Periode $periode): static
+    public function setPeriode(?Periode $periode): self
     {
         $this->periode = $periode;
 
@@ -185,7 +185,7 @@ class Remuneration
         return $this->note;
     }
 
-    public function setNote(?Note $note): static
+    public function setNote(?Note $note): self
     {
         $this->note = $note;
 
@@ -197,7 +197,7 @@ class Remuneration
         return $this->evaluation;
     }
 
-    public function setEvaluation(?Evaluation $evaluation): static
+    public function setEvaluation(?Evaluation $evaluation): self
     {
         $this->evaluation = $evaluation;
 

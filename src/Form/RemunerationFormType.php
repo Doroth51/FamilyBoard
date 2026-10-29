@@ -16,6 +16,10 @@ class RemunerationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $enfant = $options['enfant'];
+        if (isset($options['note']))
+            $note = $options['note'];
+        if (isset($options['evaluation']))
+            $evaluation = $options['evaluation'];
 
         $builder
             ->add('montant', MoneyType::class, [

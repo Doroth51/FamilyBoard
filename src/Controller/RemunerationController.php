@@ -35,6 +35,7 @@ class RemunerationController extends AbstractController
     ): Response {
         $rem = new Remuneration();
         $rem->setEnfant($enfant);
+        $rem->setNote($note);
 
         $form = $this->createForm(RemunerationFormType::class, $rem);
         $form->handleRequest($request);
@@ -65,7 +66,7 @@ class RemunerationController extends AbstractController
     ): Response {
         $rem = new Remuneration();
         $rem->setEnfant($enfant);
-
+        $rem->setEvaluation($evaluation);
         $form = $this->createForm(RemunerationFormType::class, $rem);
         $form->handleRequest($request);
 
