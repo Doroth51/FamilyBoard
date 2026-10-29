@@ -121,7 +121,7 @@
 
                     <tbody>
                         {% for matiere in matieres %}
-
+        
                             {# Ligne matière + moyenne #}
                             <tr
                                 class="table-secondary matiere-row"
@@ -609,47 +609,78 @@
             shadow: false,
         });
 
-        const labels = [
-            {% for type, infos in totauxParType %}
-                "{{ type }}"{% if not loop.last %},{% endif %}
-            {% endfor %}
+        const labels = {{ remunerationChartLabels|json_encode|raw }};
+        const data = {{ remunerationChartData|json_encode|raw }};
+
+        const colors = [
+            '#00BCD4',
+            '#FFC107',
+            '#9C27B0',
+            '#4CAF50',
+            '#F44336',
+            '#2196F3',
+            '#FF9800',
+            '#795548',
+            '#673AB7',
+            '#009688',
+            '#3F51B5',
+            '#E91E63',
+            '#8BC34A',
+            '#607D8B'
         ];
 
-        const data = [
-            {% for type, infos in totauxParType %}
-                {{ infos.total }}{% if not loop.last %},{% endif %}
-            {% endfor %}
-        ];
+        new Chart(
+            document.getElementById('remunerationChart'),
+            {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors.slice(0, labels.length)
+                    }]
+                },
+                options: {
+                    responsive: true,
 
-        new Chart(document.getElementById('remunerationChart'), {
-            type: 'pie',
-            data: {
-                datasets: [{
-                    data: data,
-                    backgroundColor: [
-                        '#00BCD4',
-                        '#FFC107',
-                        '#9C27B0',
-                        '#4CAF50',
-                        '#F44336',
-                        '#2196F3',
-                    ]
-                }],
-                labels: labels
-            },
-            options: {
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        align: 'start',
-                        labels: {
-                            usePointStyle: true,
-                            pointStyle: 'circle'
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            align: 'start',
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+
+                                    const total = context.dataset.data.reduce(
+                                        (a, b) => a + b,
+                                        0
+                                    );
+
+                                    const value = context.raw;
+
+                                    const percentage = (
+                                        value / total * 100
+                                    ).toFixed(1);
+
+                                    return context.label
+                                        + ' : '
+                                        + value
+                                        + ' € ('
+                                        + percentage
+                                        + '%)';
+                                }
+                            }
                         }
                     }
                 }
             }
-        });
+        );
 
         document.querySelectorAll('.remuneration-row').forEach(row => {
             row.addEventListener('click', function () {

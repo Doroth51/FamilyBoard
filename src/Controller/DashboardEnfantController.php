@@ -84,6 +84,7 @@ class DashboardEnfantController extends AbstractController
                         'notes' => [],
                         'totalPoints' => 0,
                         'totalCoefficients' => 0,
+                        'moyenne' => null
                     ];
                 }
 
@@ -94,7 +95,7 @@ class DashboardEnfantController extends AbstractController
                 $matieres[$matiereId]['totalCoefficients'] +=
                     $note->getCoefficient();
             }
-            foreach ($matieres as &$matiere) {
+            foreach ($matieres as $matiere) {
                 $matiere['moyenne'] =
                     $matiere['totalCoefficients'] > 0
                     ? $matiere['totalPoints'] / $matiere['totalCoefficients']
@@ -158,10 +159,11 @@ class DashboardEnfantController extends AbstractController
         //         $notesByMatieres[$note['matiere']] = [];
         //     }
         // }
+
         // Rémunérations
         $remunerations = $remRepo->findBy(['enfant' => $enfant], ['date' => 'DESC']);
-        $totauxParType = [];
         $remunerationsParType = [];
+        $graphiqueRemunerations = [];
 
         foreach ($remunerations as $remuneration) {
             $type = $remuneration->getType()->getName();
@@ -176,18 +178,51 @@ class DashboardEnfantController extends AbstractController
             $remunerationsParType[$type]['remunerations'][] = $remuneration;
             $remunerationsParType[$type]['montantTotal'] += $remuneration->getMontant();
 
-            if (!isset($totauxParType[$type])) {
-                $totauxParType[$type] = [
-                    'nombre' => 0,
-                    'total' => 0,
-                ];
+            $montant = $remuneration->getMontant();
+
+            // Argent de poche
+            if (
+                $remuneration->getNote() === null
+                && $remuneration->getEvaluation() === null
+            ) {
+                $label = 'Argent de poche';
+
+                $graphiqueRemunerations[$label]
+                    = ($graphiqueRemunerations[$label] ?? 0) + $montant;
+
+                continue;
             }
 
-            $totauxParType[$type]['nombre']++;
-            $totauxParType[$type]['total'] += $remuneration->getMontant();
-        }
+            // Récompense liée à une note
+            if ($remuneration->getNote()) {
 
-        arsort($totauxParType);
+                $matiere = $remuneration
+                    ->getNote()
+                    ->getMatiere()
+                    ->getName();
+
+                $label = sprintf('%s (note)', $matiere);
+
+                $graphiqueRemunerations[$label]
+                    = ($graphiqueRemunerations[$label] ?? 0) + $montant;
+            }
+
+            // Récompense liée à une évaluation
+            elseif ($remuneration->getEvaluation()) {
+
+                $matiere = $remuneration
+                    ->getEvaluation()
+                    ->getMatiere()
+                    ->getName();
+
+                $label = sprintf('%s (évaluation)', $matiere);
+
+                $graphiqueRemunerations[$label]
+                    = ($graphiqueRemunerations[$label] ?? 0) + $montant;
+            }
+        }
+        $remunerationChartLabels = array_keys($graphiqueRemunerations);
+        $remunerationChartData = array_values($graphiqueRemunerations);
 
         // // Objectifs
         // $objectifs = $objRepo->findBy(['enfant' => $enfant]);
@@ -230,7 +265,8 @@ class DashboardEnfantController extends AbstractController
             'enfant' => $enfant,
             'remunerations' => $remunerations,
             'remunerationsParType' => $remunerationsParType,
-            'totauxParType' => $totauxParType,
+            'remunerationChartLabels' => $remunerationChartLabels,
+            'remunerationChartData' => $remunerationChartData,
             'avatars' => $avatars
         ]);
     }
