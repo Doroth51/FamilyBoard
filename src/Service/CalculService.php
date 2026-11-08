@@ -22,8 +22,8 @@ class CalculService
             $coefTotal += $note->getCoefficient();
             $totalNotes += $note->getNote() * $note->getCoefficient();
             $totalBaremes += $note->getDenominateur() * $note->getCoefficient();
-            $moyenne =  ($totalNotes / $totalBaremes) * 20;
         }
+        $moyenne =  ($totalNotes / $totalBaremes) * 20;
 
         return $coefTotal > 0 ? round($moyenne, 2) : null;
     }

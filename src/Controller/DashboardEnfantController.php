@@ -303,7 +303,7 @@ class DashboardEnfantController extends AbstractController
                 $total += intval($score);
             }
 
-            $moyenne = $total / $nbCompetences;
+            $moyenne = round($total / $nbCompetences, 2);
         }
 
         return $moyenne;
