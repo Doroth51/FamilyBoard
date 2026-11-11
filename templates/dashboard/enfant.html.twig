@@ -135,10 +135,10 @@
                                     style="display:none;"
                                 >
                                     <td class="col-1">{{ note.date|date('d/m/Y') }}</td>
-                                    <td class="col-2">{{ note.libelle }}</td>
-                                    <td class="col-3" style="text-align: center;">{{ note.note }} / {{ note.denominateur }}</td>
-                                    <td class="col-1" style="text-align: center;">{{ note.coefficient|default(1) }}</td>
-                                    <td class="col-2" style="text-align: center;">
+                                    <td class="col-4">{{ note.libelle }}</td>
+                                    <td class="col-1" style="text-align: center;">{{ note.note }} / {{ note.denominateur }}</td>
+                                    <td class="col-1" style="text-align: center;">coef {{ note.coefficient|default(1) }}</td>
+                                    <td class="col-3" style="text-align: start;">
                                         {% if note.isRemuneration() %}
                                             {% if note.remuneration is not empty %}
                                                 {{ note.remuneration.montant }}
@@ -149,7 +149,7 @@
                                             Aucune rémunération prévue
                                         {% endif %}
                                     </td>
-                                    <td class="col-3">
+                                    <td class="col-3" style="display:flex;justify-content:space-between;">
                                         <a
                                             href="{{ path('note_show', {id: note.id}) }}"
                                         ><img
