@@ -95,14 +95,15 @@ class DashboardEnfantController extends AbstractController
                 $matieres[$matiereId]['totalCoefficients'] +=
                     $note->getCoefficient();
             }
-            foreach ($matieres as $matiere) {
-                $matiere['moyenne'] =
+            foreach ($matieres as $matiereId => $matiere) {
+                $matieres[$matiereId]['moyenne'] =
                     $matiere['totalCoefficients'] > 0
                     ? $matiere['totalPoints'] / $matiere['totalCoefficients']
                     : 0;
+
                 unset(
-                    $matiere['totalPoints'],
-                    $matiere['totalCoefficients']
+                    $matieres[$matiereId]['totalPoints'],
+                    $matieres[$matiereId]['totalCoefficients']
                 );
             }
         } else { //evaluation
