@@ -68,7 +68,6 @@ class DashboardEnfantController extends AbstractController
 
         if ($enfant->getEvaluationMode() === "note") {
             $matieres = [];
-            $moyenneGenerale = $calculService->calculMoyenneGenerale($enfant);
 
             foreach ($enfant->getNotes() as $note) {
                 $matiere = $note->getMatiere();
@@ -83,29 +82,36 @@ class DashboardEnfantController extends AbstractController
                         'nom' => $matiere->getName(),
                         'notes' => [],
                         'totalPoints' => 0,
-                        'totalCoefficients' => 0,
+                        'pointsPossibles' => 0,
                         'moyenne' => null
                     ];
                 }
 
                 $matieres[$matiereId]['notes'][] = $note;
                 $matieres[$matiereId]['libelle'] = $note->getLibelle();
-                $matieres[$matiereId]['totalPoints'] +=
-                    ($note->getNote() / $note->getDenominateur()) * 20 * $note->getCoefficient();
-                $matieres[$matiereId]['totalCoefficients'] +=
-                    $note->getCoefficient();
+                $matieres[$matiereId]['totalPoints'] += ($note->getNote() * $note->getCoefficient());
+                $matieres[$matiereId]['pointsPossibles'] += ($note->getDenominateur() * $note->getCoefficient());
             }
+            $moyenneParMatiere = null;
+            $nbMatiere = null;
+            $moyenneGenerale = null;
             foreach ($matieres as $matiereId => $matiere) {
-                $matieres[$matiereId]['moyenne'] =
-                    $matiere['totalCoefficients'] > 0
-                    ? $matiere['totalPoints'] / $matiere['totalCoefficients']
+                $moyenne = $matiere['totalPoints'] > 0
+                    ? ($matiere['totalPoints'] / $matiere['pointsPossibles']) * 20
                     : 0;
+                $matieres[$matiereId]['moyenne'] = $moyenne;
 
                 unset(
                     $matieres[$matiereId]['totalPoints'],
-                    $matieres[$matiereId]['totalCoefficients']
+                    $matieres[$matiereId]['pointsPossibles']
                 );
+
+                $moyenneParMatiere += $moyenne;
+                $nbMatiere += 1;
             }
+
+            if ($nbMatiere > 0)
+                $moyenneGenerale = round($moyenneParMatiere / $nbMatiere, 2);
         } else { //evaluation
             $evaluations = $enfant->getEvaluations()->toArray();
             $scores = [];
