@@ -131,14 +131,14 @@
                             {% for note in matiere.notes %}
                                 <tr
                                     id="matiere-{{ matiere.id }}"
-                                    class="notes-detail notes-matiere-{{ matiere.id }}"
+                                    class="container notes-detail notes-matiere-{{ matiere.id }}"
                                     style="display:none;"
                                 >
-                                    <td>{{ note.date|date('d/m/Y') }}</td>
-                                    <td>{{ note.libelle }}</td>
-                                    <td style="text-align: center;">{{ note.note }} / {{ note.denominateur }}</td>
-                                    <td style="text-align: center;">{{ note.coefficient|default(1) }}</td>
-                                    <td style="text-align: center;">
+                                    <td class="col-1">{{ note.date|date('d/m/Y') }}</td>
+                                    <td class="col-2">{{ note.libelle }}</td>
+                                    <td class="col-3" style="text-align: center;">{{ note.note }} / {{ note.denominateur }}</td>
+                                    <td class="col-1" style="text-align: center;">{{ note.coefficient|default(1) }}</td>
+                                    <td class="col-2" style="text-align: center;">
                                         {% if note.isRemuneration() %}
                                             {% if note.remuneration is not empty %}
                                                 {{ note.remuneration.montant }}
@@ -149,7 +149,7 @@
                                             Aucune rémunération prévue
                                         {% endif %}
                                     </td>
-                                    <td>
+                                    <td class="col-3">
                                         <a
                                             href="{{ path('note_show', {id: note.id}) }}"
                                         ><img
@@ -293,22 +293,27 @@
 
                             {% for evaluation in data.evaluations %}
                                 <tr
-                                    class="notes-detail evaluations-matiere-{{ loop.parent.loop.index }}"
+                                    class="container notes-detail evaluations-matiere-{{ loop.parent.loop.index }}"
                                     style="display:none;"
                                 >
-                                    <td>{{ evaluation.date|date('d/m/Y') }}</td>
-                                    <td>{{ evaluation.libelle }}</td>                                    
-                                    {% if evaluation.niveau === 'MI' %}                                         
-                                        <td style="text-align:center;"><span class="jaune" style="background-color: #ebff0e;text-align:center;border-radius: 50px;padding: 5px 5px;">{{ evaluation.niveau }}</span></td>
-                                    {% elseif evaluation.niveau === 'MF' %}
-                                        <td style="text-align:center;"><span class="jaune" style="background-color: #ff05ac;text-align:center;border-radius: 50px;padding: 5px 5px;">{{ evaluation.niveau }}</span></td>
-                                    {% elseif evaluation.niveau === 'MS' %}
-                                        <td style="text-align:center;"><span class="jaune" style="background-color: #3f48ff;text-align:center;border-radius: 50px;padding: 5px 5px;">{{ evaluation.niveau }}</span></td>
-                                    {% else %}
-                                        <td style="text-align:center;"><span class="jaune" style="background-color: #00de67;text-align:center;border-radius: 50px;padding: 5px 5px;">{{ evaluation.niveau }}</span></td>
-                                    {% endif %}
+                                    <td class="col-1">{{ evaluation.date|date('d/m/Y') }}</td>
+                                    <td class="col-5">{{ evaluation.libelle }}</td>                                    
+                                    <td class="col-1" style="text-align:start;">
+                                        {% set color = '#00de67' %}
+
+                                        {% if evaluation.niveau == 'MI' %}
+                                            {% set color = '#ebff0e' %}
+                                        {% elseif evaluation.niveau == 'MF' %}
+                                            {% set color = '#ff05ac' %}
+                                        {% elseif evaluation.niveau == 'MS' %}
+                                            {% set color = '#3f48ff' %}
+                                        {% endif %}
+
+                                        <span style="color:{{ color }};font-size:1.2rem;">●</span>
+                                        <span class="text-dark">{{ evaluation.niveau }}</span>
                                     </td>
-                                    <td>
+                                    
+                                    <td class="col-3">
                                         {% if evaluation.isRemuneration() %}
                                             {% if evaluation.remuneration is not empty %}
                                                 {{ evaluation.remuneration.montant }}
@@ -319,7 +324,7 @@
                                             Aucune rémunération prévue
                                         {% endif %}
                                     </td>
-                                    <td>
+                                    <td class="col-2" style="display:flex;justify-content:space-between">
                                         <a
                                             href="{{ path('evaluation_show', {id: evaluation.id}) }}"
                                         ><img
