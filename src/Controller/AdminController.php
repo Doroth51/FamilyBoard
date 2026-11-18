@@ -16,10 +16,9 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_ADMIN')]
-#[Route('/admin')]
 class AdminController extends AbstractController
 {
-    #[Route('/', name: 'admin_dashboard')]
+    #[Route('/dashboard/admin', name: 'admin_dashboard')]
     public function dashboard(
         UserRepository $userRepo,
         FamilyGroupRepository $groupRepo,
@@ -31,7 +30,7 @@ class AdminController extends AbstractController
         RemunerationTypeRepository $remunerationTypeRepository,
         NiveauRepository $niveauRepository
     ) {
-        return $this->render('admin/dashboard.html.twig', [
+        return $this->render('admin/dashboard2.html.twig', [
             'users' => $userRepo->findAll(),
             'groups' => $groupRepo->findAll(),
             'enfants' => $enfantRepo->findAll(),
